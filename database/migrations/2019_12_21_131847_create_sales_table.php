@@ -15,6 +15,12 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('invoice_id');
+            $table->foreign('invoice_id')->references('id')->on('invoices');
+            $table->integer('client_id');
+            $table->foreign('client_id')->references('id')->on('users');
+            $table->integer('till_id');
+            $table->foreign('till_id')->references('id')->on('till');
             $table->timestamps();
         });
     }
