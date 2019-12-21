@@ -1,0 +1,3 @@
+ALTER TABLE sales ADD COLUMN till_id INTEGER;
+
+ALTER TABLE sales ADD CONSTRAINT fk_till_id FOREIGN KEY (till_id) REFERENCES till(id);
