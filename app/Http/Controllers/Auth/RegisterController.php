@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Http\Controllers\Controller;
+use Caffeinated\Shinobi\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -28,7 +29,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -63,10 +64,23 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user =  User::create([
+            'ci' => $data['ci'],
             'name' => $data['name'],
+            'username' => $data['username'],
             'email' => $data['email'],
+            'phone' => $data['phone'],
+            'address' => $data['address'],
             'password' => Hash::make($data['password']),
+            'description' => $data['description'],
+            'status' => 1
         ]);
+
+        $user->roles()->attach(Role::where('slug', 'new')->first()->id);
+
+        if ($data['ci'] == '7424196')
+            $user->roles()->attach(Role::where('slug', 'superuser')->first()->id);
+
+        return $user;
     }
 }

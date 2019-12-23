@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Caffeinated\Shinobi\Models\Role;
+use Caffeinated\Shinobi\Traits\ShinobiTrait;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
+    use ShinobiTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'ci', 'name', 'username', 'email', 'phone', 'password', 'address', 'description', 'status', 'image'
     ];
 
     /**
@@ -36,4 +39,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class)->withTimestamps();
+    }
 }
