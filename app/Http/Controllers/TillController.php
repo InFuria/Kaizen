@@ -43,14 +43,14 @@ class TillController extends Controller
     {
         try{
             /*if (! auth()->user()->isRole('cashier')){
-                \Log::warning('TillController::status The user ' . auth()->user()->name . 'no has permission to access to this function ');
+                \Log::warning('TillController::create The user ' . auth()->user()->name . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }*/
 
             return view('till.create');
 
         } catch (\Exception $e){
-            Log::error('TillController::status ' . $e->getMessage(), ['error_line' => $e->getLine()]);
+            Log::error('TillController::create ' . $e->getMessage(), ['error_line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
         }
     }
@@ -59,7 +59,7 @@ class TillController extends Controller
     {
         try{
             /*if (! auth()->user()->isRole('cashier')){
-                \Log::warning('TillController::status The user ' . auth()->user()->name . 'no has permission to access to this function ');
+                \Log::warning('TillController::store The user ' . auth()->user()->name . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }*/
 
@@ -76,7 +76,7 @@ class TillController extends Controller
             return redirect()->back()->with('success', 'La caja se ha agregado correctamente.');
 
         } catch (\Exception $e){
-            Log::error('TillController::status ' . $e->getMessage(), ['error_line' => $e->getLine()]);
+            Log::error('TillController::store ' . $e->getMessage(), ['error_line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
         }
     }
@@ -112,7 +112,7 @@ class TillController extends Controller
     {
         try{
             /*if (! auth()->user()->isRole('cashier')){
-                \Log::warning('TillController::extraction The user ' . auth()->user()->name . 'no has permission to access to this function ');
+                \Log::warning('TillController::extract The user ' . auth()->user()->name . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }*/
 
@@ -126,7 +126,7 @@ class TillController extends Controller
         }
     }
 
-    public function extraction(TillRequest $request)
+    public function extraction(TillRequest $request, Till $till)
     {
         try{
             /*if (! auth()->user()->isRole('cashier')){
@@ -134,6 +134,17 @@ class TillController extends Controller
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }*/
 
+            if (Hash::check($request->password, auth()->user()->password)){
+
+                $actual_cash = $till->actual_cash;
+
+                $till->actual_cash = $actual_cash - $request->amount;
+                $till->save();
+
+                return redirect()->back()->with('success', 'El estado de la caja ' . $request->id . " se ha actualizado!");
+            }
+
+            return redirect()->back()->with('error', 'Contraseña incorrecta');
 
         } catch (\Exception $e){
             Log::error('TillController::extraction ' . $e->getMessage(), ['error_line' => $e->getLine()]);
@@ -141,23 +152,24 @@ class TillController extends Controller
         }
     }
 
-    public function charge()
+    public function charge(Till $till)
     {
         try{
             /*if (! auth()->user()->isRole('cashier')){
-                \Log::warning('TillController::deposit The user ' . auth()->user()->name . 'no has permission to access to this function ');
+                \Log::warning('TillController::charge The user ' . auth()->user()->name . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }*/
 
+            $user = User::where('id', auth()->user()->id)->pluck('name', 'id');
 
-            return view('till.deposit');
+            return view('till.deposit', compact('till', 'user'));
         } catch (\Exception $e){
-            Log::error('TillController::deposit ' . $e->getMessage(), ['error_line' => $e->getLine()]);
+            Log::error('TillController::charge ' . $e->getMessage(), ['error_line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
         }
     }
 
-    public function deposit(Till $id)
+    public function deposit(TillRequest $request, Till $till)
     {
         try{
             /*if (! auth()->user()->isRole('cashier')){
@@ -165,6 +177,17 @@ class TillController extends Controller
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }*/
 
+            if (Hash::check($request->password, auth()->user()->password)){
+
+                $actual_cash = $till->actual_cash;
+
+                $till->actual_cash = $actual_cash + $request->amount;
+                $till->save();
+
+                return redirect()->back()->with('success', 'El estado de la caja ' . $request->id . " se ha actualizado!");
+            }
+
+            return redirect()->back()->with('error', 'Contraseña incorrecta');
 
         } catch (\Exception $e){
             Log::error('TillController::deposit ' . $e->getMessage(), ['error_line' => $e->getLine()]);

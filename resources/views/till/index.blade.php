@@ -15,12 +15,21 @@
 
     <div class="card">
         <div class="card-body">
-            <h4>Sucursal actual: <small><i>{{ $branch->name }} </i></small>@if(isset($selectedTill))<small class="text-black-50"><i>( Caja n° {{ $selectedTill->id }} )</i></small>@endif</h4>
-            @if(isset($selectedTill) && $selectedTill->status == 0)
-                <label class="bg-danger rounded">&nbsp;Cerrada&nbsp;</label>
-            @else
-                <label class="bg-success rounded">&nbsp;Abierta&nbsp;</label>
-            @endif
+            <div class="row">
+                <div class="col-10">
+                    <h4><i>{{ $branch->name }} </i>@if(isset($selectedTill))<small class="text-black-50"><i>( Caja n° {{ $selectedTill->id }} )</i></small>@endif</h4>
+                    @if(isset($selectedTill) && $selectedTill->status == 0)
+                        <label class="bg-danger rounded">&nbsp;Cerrada&nbsp;</label>
+                    @else
+                        <label class="bg-success rounded">&nbsp;Abierta&nbsp;</label>
+                    @endif
+                </div>
+
+                <div class="card-header bg-info rounded">
+                    <label>Saldo Actual: </label>
+                    <h4><i class="fas fa-dollar-sign"></i> {{ number_format($selectedTill->actual_cash, 2, ",", ".") }} Gs.</h4>
+                </div>
+            </div>
             <hr>
 
             <div id="final-options" type="hidden">
@@ -48,7 +57,7 @@
 
                     <hr>
 
-                    <a href="{{ route('till.charge') }}" id="deposit">
+                    <a href="{{ route('till.charge', ['till' => $selectedTill->id]) }}" id="deposit">
                         <div class="card-header">
                             <i class="fas fa-donate fa-5x"></i>
                             <h4>Aporte de caja</h4>

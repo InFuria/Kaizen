@@ -24,7 +24,7 @@ class TillRequest extends FormRequest
     public function rules()
     {
         return [
-            'mount' => 'number|min:0'
+            'mount' => 'numeric|min:0'
         ];
     }
 }

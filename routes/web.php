@@ -59,7 +59,7 @@ Route::middleware(['auth'])->group(function () {
 /** Till manage */
 Route::resource('till', 'TillController')->except(['edit', 'update', 'show', 'destroy']);
 Route::get('till/{till}/extract', 'TillController@extract')->name('till.extract');
-Route::get('till/charge', 'TillController@charge')->name('till.charge');
+Route::get('till/{till}/charge', 'TillController@charge')->name('till.charge');
 Route::post('till/{till}/status', 'TillController@status')->name('till.status');
 Route::post('till/{till}/extraction', 'TillController@extraction')->name('till.extraction');
 Route::post('till/{till}/deposit', 'TillController@deposit')->name('till.deposit');

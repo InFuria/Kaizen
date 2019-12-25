@@ -13,7 +13,6 @@
             <div id="card">
                 <div class="card-body">
                     {!! Form::model($till, ['route' => ['till.extraction', $till->id], 'method' => 'POST', 'id' => 'extractionForm']) !!}
-                    @method('PATCH')
                     @csrf
 
                     <div class="form-group">
@@ -22,8 +21,8 @@
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('mount', 'Monto a retirar: ') !!}
-                        {!! Form::input('number', 'mount', null, ['class' => 'form-control', 'placeholder' => 'Ingrese el monto de dinero que quiere retirar (sin puntos ni simbolos)']) !!}
+                        {!! Form::label('amount', 'Monto a retirar: ') !!}
+                        {!! Form::input('number', 'amount', null, ['class' => 'form-control', 'placeholder' => 'Ingrese el monto de dinero que quiere retirar (sin puntos ni simbolos)']) !!}
                     </div>
 
                     <hr>
