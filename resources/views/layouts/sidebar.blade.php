@@ -27,7 +27,7 @@
 
                 <ul class="collapse list-unstyled" id="cashierSubMenu">
                     <li class="ml-3">
-                        <a class="nav-link text-white" href="{{ route('cashier.index') }}">
+                        <a class="nav-link text-white" href="{{ route('till.index') }}">
                             <i class="fas fa-balance-scale"></i>
 
                             <span class="ml-1">Administrar Caja</span>

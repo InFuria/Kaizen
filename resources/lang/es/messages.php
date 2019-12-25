@@ -17,4 +17,5 @@ return [
     'phone' => 'Telefono',
     'address' => 'Direccion',
     'description' => 'Descripcion',
+    'branches' => 'Sucursal',
 ];
