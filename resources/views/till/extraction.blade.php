@@ -17,19 +17,19 @@
 
                     <div class="form-group">
                         {!! Form::label('user', 'Usuario') !!}
-                        {!! Form::select('user', $user, ['class' => 'form-control', 'id' => 'selectedUser']) !!}
+                        {!! Form::select('user', $user, ['class' => 'form-control btn-lg', 'id' => 'selectedUser']) !!}
                     </div>
 
                     <div class="form-group">
                         {!! Form::label('amount', 'Monto a retirar: ') !!}
-                        {!! Form::input('number', 'amount', null, ['class' => 'form-control', 'placeholder' => 'Ingrese el monto de dinero que quiere retirar (sin puntos ni simbolos)']) !!}
+                        {!! Form::input('number', 'amount', null, ['class' => 'form-control btn-lg', 'placeholder' => 'Ingrese el monto de dinero que quiere retirar (sin puntos ni simbolos)']) !!}
                     </div>
 
                     <hr>
 
                     <div class="form-group">
                         {!! Form::label('password', 'Contraseña: ') !!}
-                        {!! Form::password('password', null, ['class' => 'form-control', 'placeholder' => 'Ingrese su contraseña para validar la operacion', 'required']) !!}
+                        {!! Form::password('password', ['class' => 'form-control btn-lg', 'placeholder' => 'Ingrese su contraseña para validar la operacion', 'required']) !!}
                     </div>
 
                     <button type="submit" class="btn btn-warning btn-block"><a>RETIRAR</a></button>

@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Caja')
+@section('title', 'Stock')
 
 @section('content')
     <h2 class="">
-        Aporte de Caja
+        Carga de Stock
     </h2>
 
     <div class="card">
@@ -12,17 +12,17 @@
 
             <div id="card">
                 <div class="card-body">
-                    {!! Form::model($till, ['route' => ['till.deposit', $till->id], 'method' => 'POST', 'id' => 'depositForm']) !!}
+                    {!! Form::open(['route' => 'stock.store', 'method' => 'POST', 'id' => 'frmCash']) !!}
                     @csrf
 
                     <div class="form-group">
-                        {!! Form::label('user', 'Usuario') !!}
-                        {!! Form::select('user', $user, ['class' => 'form-control btn-lg', 'id' => 'selectedUser']) !!}
+                        {!! Form::label('product', 'Productos') !!}
+                        {!! Form::select('product', isset($products) ? $products : ['name' => '...'], null, ['class' => 'form-control btn-lg', 'id' => 'product']) !!}
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('amount', 'Monto a ingresar: ') !!}
-                        {!! Form::input('number', 'amount', null, ['class' => 'form-control btn-lg', 'placeholder' => 'Ingrese el monto de dinero que desea ingresar (sin puntos ni simbolos)']) !!}
+                        {!! Form::label('quantity', 'Cantidad: ') !!}
+                        {!! Form::input('number', 'quantity', null, ['class' => 'form-control btn-lg', 'placeholder' => 'Ingrese el la cantidad del producto que desea ingresar', 'min' => 1]) !!}
                     </div>
 
                     <hr>
@@ -34,7 +34,7 @@
 
                     <button type="submit" class="btn btn-warning btn-block"><a>CARGAR</a></button>
 
-                    <a href="{{ route('till.index') }}" class="btn btn-secondary btn-block">VOLVER</a>
+                    <a href="{{ route('products.index') }}" class="btn btn-secondary btn-block">VOLVER</a>
 
                     {!! Form::close() !!}
                 </div>

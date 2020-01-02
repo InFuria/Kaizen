@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Branch;
+use App\Http\Requests\TillAuditRequest;
 use App\Http\Requests\TillRequest;
 use App\Till;
+use App\TillAudit;
+use App\TillTransaction;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -30,6 +34,8 @@ class TillController extends Controller
                 $selectedTill = Till::where('id', $request->input('till'))->first();
                 return view('till.index', compact('selectedTill', 'till', 'branch'));
             }
+
+            session(['till' => $selectedTill->id]);
 
             return view('till.index', compact('till', 'branch', 'selectedTill'));
 
@@ -63,6 +69,7 @@ class TillController extends Controller
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }*/
 
+            DB::beginTransaction();
 
             $till = Till::create([
                 'branch_id' => $request->branch_id,
@@ -73,9 +80,22 @@ class TillController extends Controller
 
             ]);
 
+            dump($till->id);
+            $till_transaction = new TillTransaction();
+            $till_transaction->till_id = $till->id;
+            $till_transaction->type_id= 20;
+            $till_transaction->detail_id = 0;
+            $till_transaction->cash_before_op = 0;
+            $till_transaction->cash_after_op = 0;
+            $till_transaction->user_id = auth()->user()->id;
+            $till_transaction->save();
+
+            DB::commit();
+
             return redirect()->back()->with('success', 'La caja se ha agregado correctamente.');
 
         } catch (\Exception $e){
+            DB::rollBack();
             Log::error('TillController::store ' . $e->getMessage(), ['error_line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
         }
@@ -93,9 +113,32 @@ class TillController extends Controller
 
                 $id = $request->id;
 
+                DB::beginTransaction();
+
                 $till = Till::find($id);
+                $till_transaction = new TillTransaction();
+                $till_transaction->type_id= 5;
+
+                if ($till->status === true && ! session('audit')){
+                    return redirect()->back()->with('error', 'Por favor realice un arqueo de caja antes de cerrar la misma');
+                }
+
                 $till->status = ! $till->status;
                 $till->save();
+
+                if ($till->status == 0) {
+                    session()->forget('audit');
+                    $till_transaction->type_id= 6;
+                }
+
+                $till_transaction->till_id = $till->id;
+                $till_transaction->detail_id = 0;
+                $till_transaction->cash_before_op = 0;
+                $till_transaction->cash_after_op = 0;
+                $till_transaction->user_id = auth()->user()->id;
+                $till_transaction->save();
+
+                DB::commit();
 
                 return redirect()->back()->with('success', 'El estado de la caja ' . $till->id . " se ha actualizado!");
             }
@@ -103,6 +146,7 @@ class TillController extends Controller
             return redirect()->back()->with('error', 'Contraseña incorrecta');
 
         } catch (\Exception $e){
+            DB::rollBack();
             Log::error('TillController::status ' . $e->getMessage(), ['error_line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
         }
@@ -136,10 +180,26 @@ class TillController extends Controller
 
             if (Hash::check($request->password, auth()->user()->password)){
 
+                DB::beginTransaction();
+
                 $actual_cash = $till->actual_cash;
+
+                if ((integer)$request->amount > $actual_cash)
+                    return redirect()->back()->with('error', 'El monto ingresado supera el saldo disponible.');
 
                 $till->actual_cash = $actual_cash - $request->amount;
                 $till->save();
+
+                $till_transaction = new TillTransaction();
+                $till_transaction->till_id = $till->id;
+                $till_transaction->type_id= 1;
+                $till_transaction->detail_id = 0;
+                $till_transaction->cash_before_op = $actual_cash;
+                $till_transaction->cash_after_op = $till->actual_cash;
+                $till_transaction->user_id = auth()->user()->id;
+                $till_transaction->save();
+
+                DB::commit();
 
                 return redirect()->back()->with('success', 'El estado de la caja ' . $request->id . " se ha actualizado!");
             }
@@ -147,6 +207,7 @@ class TillController extends Controller
             return redirect()->back()->with('error', 'Contraseña incorrecta');
 
         } catch (\Exception $e){
+            DB::rollBack();
             Log::error('TillController::extraction ' . $e->getMessage(), ['error_line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
         }
@@ -179,10 +240,23 @@ class TillController extends Controller
 
             if (Hash::check($request->password, auth()->user()->password)){
 
+                DB::beginTransaction();
+
                 $actual_cash = $till->actual_cash;
 
                 $till->actual_cash = $actual_cash + $request->amount;
                 $till->save();
+
+                $till_transaction = new TillTransaction();
+                $till_transaction->till_id = $till->id;
+                $till_transaction->type_id= 2;
+                $till_transaction->detail_id = 0;
+                $till_transaction->cash_before_op = $actual_cash;
+                $till_transaction->cash_after_op = $till->actual_cash;
+                $till_transaction->user_id = auth()->user()->id;
+                $till_transaction->save();
+
+                DB::commit();
 
                 return redirect()->back()->with('success', 'El estado de la caja ' . $request->id . " se ha actualizado!");
             }
@@ -190,9 +264,98 @@ class TillController extends Controller
             return redirect()->back()->with('error', 'Contraseña incorrecta');
 
         } catch (\Exception $e){
+            DB::rollBack();
             Log::error('TillController::deposit ' . $e->getMessage(), ['error_line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
         }
+    }
+
+    public function cashCount(Till $till){
+        try{
+            /*if ($this->user){
+                Log::warning('TillController::cashCount The user ' . $this->user . 'no has permission to access to this function ');
+                return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
+            }*/
+
+            return view('till.cash_count', compact('till'));
+
+        } catch (\Exception $e){
+            Log::error('TillController::cashCount ' . $e->getMessage(), ['error_line' => $e->getLine()]);
+            return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
+        }
+
+    }
+
+    public function audit(TillAuditRequest $request, Till $till){
+        try{
+            /*if ($this->user){
+                Log::warning('TillController::audit The user ' . $this->user . 'no has permission to access to this function ');
+                return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
+            }*/
+
+            if (Hash::check($request->password, auth()->user()->password)){
+
+                DB::beginTransaction();
+
+                $declared_cash = (integer)$request->declared_cash;
+                $status = null;
+
+                switch ($declared_cash){
+                    case ($declared_cash === $till->actual_cash):
+                        $status = 0; //normal
+                        break;
+                    case ($declared_cash < $till->actual_cash && $declared_cash != 0):
+                        $status = 1; //faltante
+                        break;
+                    case ($declared_cash > $till->actual_cash):
+                        $status = 2; //sobrante
+                        break;
+                }
+
+                $audit = TillAudit::create([
+                    'till_id' => $till->id,
+                    'user_id' => auth()->user()->id,
+                    'registered_cash' => $till->actual_cash,
+                    'declared_cash' => $declared_cash,
+                    'status' => $status
+                ]);
+
+                $tillSession = session()->put('audit', [$till]);
+
+                switch ($status){
+                    case 0:
+                        $message = 'El arqueo dio un resultado normal. Puede cerrar la caja.';
+                        break;
+                    case 1:
+                        $message = 'El arqueo dio como resultado: faltante de dinero';
+                        break;
+                    case 2:
+                        $message = 'El arqueo dio como resultado: sobrante de dinero';
+                        break;
+                }
+
+                $till_transaction = new TillTransaction();
+                $till_transaction->till_id = $till->id;
+                $till_transaction->type_id= 4;
+                $till_transaction->detail_id = $audit->id;
+                $till_transaction->cash_before_op = $till->actual_cash;
+                $till_transaction->cash_after_op = $till->actual_cash;
+                $till_transaction->user_id = auth()->user()->id;
+                $till_transaction->save();
+
+                DB::commit();
+
+                return redirect()->back()->with('success', $message);
+            }
+
+            return redirect()->back()->with('error', 'Contraseña incorrecta');
+
+        } catch (\Exception $e){
+            DB::rollBack();
+            Log::error('TillController::audit ' . $e->getMessage(), ['error_line' => $e->getLine()]);
+            return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
+        }
+
     }
 
 }

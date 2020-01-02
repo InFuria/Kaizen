@@ -36,5 +36,11 @@ class RoleTableSeeder extends Seeder
         $role->slug = 'audit';
         $role->description = 'Usuario asignado para auditar productosy efectivo';
         $role->save();
+
+        $role = new Role();
+        $role->name = 'Cliente';
+        $role->slug = 'client';
+        $role->description = 'Cliente registrado en el sistema';
+        $role->save();
     }
 }

@@ -48,7 +48,7 @@
 
                     <hr>
 
-                    <a type="button" href="{{ route('till.extract', ['till' => $selectedTill->id]) }}" id="extraction">
+                    <a href="{{ route('till.extract', ['till' => $selectedTill->id]) }}" id="extraction">
                         <div class="card-header">
                             <i class="fas fa-hand-holding-usd fa-5x"></i>
                             <h4>Extracto de caja</h4>
@@ -61,6 +61,15 @@
                         <div class="card-header">
                             <i class="fas fa-donate fa-5x"></i>
                             <h4>Aporte de caja</h4>
+                        </div>
+                    </a>
+
+                    <hr>
+
+                    <a href="{{ route('till.cashCount', ['till' => $selectedTill->id]) }}" id="count">
+                        <div class="card-header">
+                            <i class="fas fa-balance-scale fa-5x"></i>
+                            <h4>Arqueo de Caja</h4>
                         </div>
                     </a>
                 </div>

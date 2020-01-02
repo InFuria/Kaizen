@@ -64,7 +64,7 @@
                     </li>
 
                     <li class="ml-3">
-                        <a class="nav-link text-white" href="{{ route('stock.index') }}">
+                        <a class="nav-link text-white" href="{{ route('stock.charge') }}">
                             <i class="fas fa-dolly-flatbed"></i>
 
                             <span class="ml-1">Carga de Stock</span>

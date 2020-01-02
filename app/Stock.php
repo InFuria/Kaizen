@@ -17,7 +17,7 @@ class Stock extends Model
      * @var array
      */
     protected $fillable = [
-        'slug', 'name', 'description', 'image', 'price', 'cost', 'type'
+        'product_id', 'branch_id', 'quantity'
     ];
 
     /**
@@ -28,4 +28,5 @@ class Stock extends Model
     protected $hidden = [
         '',
     ];
+
 }
