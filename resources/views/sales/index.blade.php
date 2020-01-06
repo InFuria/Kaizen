@@ -16,7 +16,7 @@
                     {!! Form::label('client', 'Cliente: ', ['class' => 'form-control-lg']) !!}
                     {!! Form::text('client', isset($client) ? $client->ci : null, ['class' => 'form-control btn-lg', 'placeholder' => 'Ingrese el CI del Cliente']) !!}
 
-                    <button type="submit" class="btn btn-success btn-lg text-white mt-4">REGISTRAR</button>
+                    <button type="submit" class="btn btn-success btn-lg text-white mt-4">AGREGAR VENTA</button>
                     <a type="button" href="{{ route('users.create') }}" class="btn btn-info btn-lg text-white mt-4">CREAR CLIENTE</a>
 
                     {!! Form::close() !!}
@@ -27,7 +27,7 @@
                     <br>
 
                     <div class="row">
-                        <div class="form-group col-2">
+                        <div class="form-group col-xl-2 col-lg-3">
                             <label><strong>Tipo de Comprobante: </strong></label>
                             <select class="form-control" style="width: 150px" disabled>
                                 <option value="init">...</option>
@@ -36,7 +36,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group col-2">
+                        <div class="form-group col-xl-2 col-lg-3">
                             <label><strong>Metodo de pago: </strong></label>
                             <select class="form-control" style="width: 150px" disabled>
                                 <option value="init">...</option>
@@ -45,9 +45,9 @@
                             </select>
                         </div>
 
-                        <div class="form-group col-2">
+                        <div class="form-group col-xl-2 col-lg-3">
                             <label><strong>Codigo de Sucursal: </strong></label>
-                            <input class="form-control" style="width: 350px;" value="{{ $branch->code }}" disabled>
+                            <input class="form-control" style="width: 325px;" value="{{ $branch->code }}" disabled>
                         </div>
                     </div>
 
@@ -61,34 +61,36 @@
     @if(isset($client))
     <div class="card">
         <div class="card-body">
-            {!! Form::open(['route' => 'sales.store', 'method' => 'POST', 'id' => 'frmProducto']) !!}
+            {!! Form::open(['route' => 'sales.store', 'method' => 'POST', 'id' => 'frmProduct']) !!}
             @csrf
             <div class="row">
                 <div class="col-12">
                     <div class="row">
-                        <div class="form-group col-3">
+                        <div class="form-group col-xl-3 col-lg-5">
                             <label><strong>Producto: </strong></label>
                             {!! Form::select('product', isset($products) ? $products : ['name' => '...'], null, ['class' => 'form-control btn-lg', 'id' => 'product']) !!}
                         </div>
 
-                        <div class="form-group col-1">
+                        <div class="form-group col-xl-1 col-lg-2">
                             <label><strong>Cantidad: </strong></label>
                             {!! Form::number('quantity', null, ['class' => 'form-control btn-lg', 'id' => 'quantity', 'min' => 1]) !!}
                         </div>
 
-                        <div class="form-group" style="width: 120px;">
+                        <div class="form-group col-xl-2 col-lg-3" style="width: 120px;">
                             <label><strong>Precio: </strong></label>
                             {!! Form::text('price', null, ['class' => 'form-control btn-lg', 'id' => 'price', 'disabled' => 'disabled']) !!}
                         </div>
 
-                        <div class="form-group col-1">
+                        <div class="form-group col-xl-1 col-lg-2">
                             <label><strong>Stock: </strong></label>
                             {!! Form::number('stock', null, ['class' => 'form-control btn-lg', 'id' => 'stock', 'disabled' => 'disabled']) !!}
                         </div>
 
                         {!! Form::hidden('client', isset($client) ? $client : null) !!}
 
-                        <div class="form-group col-5">
+                        {!! Form::hidden('total_received', null, ['id' => 'total_received']) !!}
+
+                        <div class="form-group col-12">
                             <button class="btn btn-success btn-lg" type="button" id="btnAdd" onclick="addProduct()"
                                     style="margin-top: 30px">Agregar
                             </button>
@@ -126,17 +128,17 @@
     <div class="card mt-3">
         <div class="card-body">
             <div class="row">
-                <div class="col-12 mt-3 mb-3">
+                <div class="col-xl-12 col-sm-12 mt-3 mb-3">
                     <label class="form-control-lg">Total: </label>
-                    <input class="form-control-lg" type="number" id="totalPrice" disabled>
+                    <input class="form-control-lg col-sm-2" type="number" id="totalPrice" disabled>
 
                     <label class="form-control-lg">Recibido: </label>
-                    <input class="form-control-lg" type="number" id="received">
+                    <input class="form-control-lg col-sm-2" type="number" id="received">
 
                     <label class="form-control-lg">Vuelto: </label>
-                    <input class="form-control-lg" type="number" id="change" disabled>
+                    <input class="form-control-lg col-sm-2" type="number" id="change" disabled>
 
-                    <button type="submit" class="btn btn-success btn-lg float-right">Procesar</button>
+                    <button type="submit" id="process" form="frmProduct" class="btn btn-success btn-lg col-xl float-right mt-4" disabled>Procesar</button>
                 </div>
             </div>
         </div>
@@ -181,7 +183,7 @@
             let product = $('#product').val();
             let price = $('#price').val();
             let quantity = $('#quantity').val();
-            let token = $("#frmProducto input[name=_token]").val();
+            let token = $("#frmProduct input[name=_token]").val();
 
             $.ajax({
                 type: 'post',
@@ -233,6 +235,10 @@
             let calculated = received - total;
 
             $('#change').val(calculated);
+
+            $('#total_received').val(received);
+
+            $('#process').attr('disabled', false);
         });
 
         function removeProduct(id){

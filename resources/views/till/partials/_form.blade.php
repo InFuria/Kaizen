@@ -7,4 +7,4 @@
 
 <button type="submit" class="btn btn-warning btn-block"><a>{!! $btnLabel !!}</a></button>
 
-<a href="{{ route('users.index') }}" class="btn btn-secondary btn-block">VOLVER</a>
+<a href="{{ route('till.index') }}" class="btn btn-secondary btn-block">VOLVER</a>

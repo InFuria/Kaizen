@@ -16,7 +16,7 @@
     <div class="card">
         <div class="card-body">
             <div class="row">
-                <div class="col-10">
+                <div class="col-10 col-sm-9">
                     <h4><i>{{ $branch->name }} </i>@if(isset($selectedTill))<small class="text-black-50"><i>( Caja n° {{ $selectedTill->id }} )</i></small>@endif</h4>
                     @if(isset($selectedTill) && $selectedTill->status == 0)
                         <label class="bg-danger rounded">&nbsp;Cerrada&nbsp;</label>
@@ -25,7 +25,7 @@
                     @endif
                 </div>
 
-                <div class="card-header bg-info rounded">
+                <div class="card-header bg-info rounded col-sm-3">
                     <label>Saldo Actual: </label>
                     <h4><i class="fas fa-dollar-sign"></i> {{ number_format($selectedTill->actual_cash, 2, ",", ".") }} Gs.</h4>
                 </div>

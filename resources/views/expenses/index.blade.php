@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Productos')
+@section('title', 'Gastos')
 
 @section('content')
     <h2 class="">
-        Gestion de Productos
+        Gestion de Gastos
     </h2>
 
     <div class="card">
@@ -13,33 +13,30 @@
         </div>
 
         <div class="card-body">
-            <a href="{{ route('products.create') }}" class="btn btn-success">Crear Producto</a>
+            <a href="{{ route('expenses.create') }}" class="btn btn-success">Ingresar Gasto</a>
         </div>
     </div>
 
-    @if(isset($products) && count($products) > 0)
+    @if(isset($expenses) && count($expenses) > 0)
         <div class="card mt-3">
             <div class="card-body pt-3 pb-0">
                 <table class="table table-hover table-bordered">
                     <thead>
                     <tr>
-                        <th scope="col">Identificador</th>
-                        <th scope="col">Nombre</th>
+                        <th scope="col">Sucursal</th>
                         <th scope="col">Descripcion</th>
-                        <th scope="col">Precio Final</th>
+                        <th scope="col">Costo</th>
                         <th scope="col">Categoria</th>
-                        <th scope="col">Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($products as $product)
+                    @foreach($expenses as $exp)
                         <tr>
-                            <td>{{ $product->slug  }}</td>
-                            <td>{{ $product->name  }}</td>
-                            <td>{{ $product->description  }}</td>
-                            <td>{{ $product->price  }}</td>
-                            <td>{{ ucfirst($product->category)  }}</td>
-                            <td>
+                            <td>{{ $exp->branch }}</td>
+                            <td>{{ $exp->description  }}</td>
+                            <td>{{ $exp->cost  }}</td>
+                            <td>{{ $exp->category  }}</td>
+                            {{--<td>
                                 <a type="button" class="btn btn-light fas fa-info-circle" title="Ver detalles del producto" href="{{ route('products.show', ['product' => $product->id]) }}"></a>
                                 <a type="button" class="btn btn-success fas fa-pen-square" title="Editar producto" href="{{ route('products.edit', ['product' => $product->id]) }}"></a>
                                 <a type="button" class="btn btn-danger fas fa-trash" id="btnDelete"
@@ -50,7 +47,7 @@
                                    data-name="{!! $product->name !!}"
                                 >
                                 </a>
-                            </td>
+                            </td>--}}
                         </tr>
                     @endforeach
                     </tbody>
@@ -64,7 +61,7 @@
     @endif
 @endsection
 
-@include('products.partials._defaultModal')
+{{--@include('products.partials._defaultModal')
 
 @section('js')
     <script>
@@ -81,4 +78,4 @@
             modal.find('#myForm').attr('action', '/products/' + product);
         });
     </script>
-@append
+@append--}}

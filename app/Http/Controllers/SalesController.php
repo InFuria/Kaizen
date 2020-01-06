@@ -9,12 +9,15 @@ use App\Order;
 use App\Product;
 use App\Sales;
 use App\Stock;
+use App\StockHistory;
 use App\Till;
 use App\TillTransaction;
 use App\User;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 
 class SalesController extends Controller
 {
@@ -61,7 +64,6 @@ class SalesController extends Controller
 
     }
 
-
     public function store(Request $request){
 
         try{
@@ -91,8 +93,9 @@ class SalesController extends Controller
             $invoice = new Invoice();
             $invoice->id = $id;
             $invoice->payment_id = 1;
-            $invoice->total = 0;
             $invoice->client_id = $client->id;
+            $invoice->received = $data['total_received'];
+            $invoice->total = 0;
             $invoice->save();
 
 
@@ -100,26 +103,35 @@ class SalesController extends Controller
 
             $product_detail = $request->session('products')->all();
             $sum = 0;
-
-            foreach ($product_detail['product'] as $item) {
+            foreach ($product_detail['products'] as $item) {
                 $detail = new InvoiceDetail();
-                $detail->invoice_id = /*$invoice->id*/99999;
+                $detail->invoice_id = $invoice->id;
                 $detail->product_id = $item->id;
                 $detail->quantity = $item->quantity;
                 $detail->sub_total = (integer) $item->quantity*(integer) $item->price;// modificar a sub total
-                //$detail->save();
+                $detail->save();
 
                 $sum += $detail->sub_total;
 
                 $actual_stock = Stock::where('product_id', $item->id)->where('branch_id', auth()->user()->branch_id)->first();
                 $new_stock = (integer) $actual_stock->quantity - (integer) $item->quantity;
 
-                if ((integer) $item->quantity > $actual_stock)
+                if ($item->quantity > $actual_stock)
                     return redirect()->back()->with('error', 'La cantidad solicitada supera el stock disponible');
 
                 $stock = Stock::find($actual_stock->id);
                 $stock->quantity = $new_stock;
                 $stock->save();
+
+                $stock_history = new StockHistory();
+                $stock_history->stock_id = $stock->id;
+                $stock_history->product_id = $item->id;
+                $stock_history->type = 'sales';
+                $stock_history->old_quantity = $actual_stock->quantity;
+                $stock_history->new_quantity = $new_stock;
+                $stock_history->ext_trans = $invoice->id;
+                $stock_history->user_id = auth()->user()->id;
+                $stock_history->save();
             }
 
 
@@ -163,9 +175,18 @@ class SalesController extends Controller
 
             DB::commit();
 
-            session(["products"=>[]]);
+            $change = $invoice->received - $invoice->total;
+            $branch = Branch::where('id', auth()->user()->branch_id)->pluck('name')->first();
 
-            return redirect()->back()->with('success', 'Se ha registrado la venta');
+            $view =  \View::make('ticket.comprobante', compact('product_detail', 'invoice', 'branch', 'change'))->render();
+            $pdf = \App::make('dompdf.wrapper');
+            $pdf->loadHTML($view);
+            return $pdf->stream('invoice');
+
+            //return view('ticket.comprobante', compact('product_detail', 'invoice', 'branch', 'change'));
+            //session(["products"=>[]]);
+
+            //return redirect()->back()->with('success', 'Se ha registrado la venta');
 
         } catch (\Exception $e){
             DB::rollBack();
@@ -175,9 +196,9 @@ class SalesController extends Controller
     }
 
     public function addProduct(Request $request){
-        $input = $request->all();
-        $product = Product::find($input['product']);
-        $quantity = Stock::where('product_id', $input['product'])->pluck('quantity');
+        $input = $request->all(); // id de nuevo producto
+        $product = Product::find($input['product']); //nuevo producto completo
+        $quantity = Stock::where('product_id', $input['product'])->where('branch_id', auth()->user()->branch_id)->pluck('quantity');// cantidad en stock del producto
         $product->quantity = $quantity[0];
 
         if ($product->quantity < $input['quantity']){
@@ -185,10 +206,17 @@ class SalesController extends Controller
         }else {
             $product->quantity = $input['quantity'];
 
-            /*$productSession = session()->put('product', []);*/
             if (session('products') != null){
 
-                // Aca agregar validacion de cantidad
+                foreach (session('products') as $key => $item){
+                    if ($item->id == $input['product']){
+                        $item->quantity = $item->quantity + $input['quantity'];
+
+                        return json_encode(['data' => 2]);
+                    }
+                }
+
+                //$productSession = session()->put('product', []);
 
                 $productSession = session('products');
                 $productSession = session()->push('products', $product);

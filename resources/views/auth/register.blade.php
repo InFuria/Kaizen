@@ -6,7 +6,14 @@
 
     body {
     background-image: url({{ URL::asset('../images/empanada_argentina.jpg') }} );
+    background-size: 1024px 768px;
+    background-repeat: no-repeat;
+    }
+
+    @media only screen and (min-width: 1025px) {
+    body {
     background-size: cover;
+    }
     }
 @endsection
 

@@ -76,14 +76,11 @@ class TillController extends Controller
                 'status' => 0,
                 'opening_cash' => 0,
                 'actual_cash' => 0,
-                'close_cash' => 0,
-
             ]);
 
-            dump($till->id);
             $till_transaction = new TillTransaction();
             $till_transaction->till_id = $till->id;
-            $till_transaction->type_id= 20;
+            $till_transaction->type_id= 14;
             $till_transaction->detail_id = 0;
             $till_transaction->cash_before_op = 0;
             $till_transaction->cash_after_op = 0;
@@ -117,10 +114,14 @@ class TillController extends Controller
 
                 $till = Till::find($id);
                 $till_transaction = new TillTransaction();
-                $till_transaction->type_id= 5;
+                $till_transaction->type_id= 2;
 
                 if ($till->status === true && ! session('audit')){
                     return redirect()->back()->with('error', 'Por favor realice un arqueo de caja antes de cerrar la misma');
+                }
+
+                if ($till->status === false){
+                    $till->opening_cash = $request->op_cash;
                 }
 
                 $till->status = ! $till->status;
@@ -128,7 +129,7 @@ class TillController extends Controller
 
                 if ($till->status == 0) {
                     session()->forget('audit');
-                    $till_transaction->type_id= 6;
+                    $till_transaction->type_id= 1;
                 }
 
                 $till_transaction->till_id = $till->id;
@@ -298,19 +299,18 @@ class TillController extends Controller
                 DB::beginTransaction();
 
                 $declared_cash = (integer)$request->declared_cash;
+                \Log::error($till->actual_cash);
                 $status = null;
 
-                switch ($declared_cash){
-                    case ($declared_cash === $till->actual_cash):
-                        $status = 0; //normal
-                        break;
-                    case ($declared_cash < $till->actual_cash && $declared_cash != 0):
-                        $status = 1; //faltante
-                        break;
-                    case ($declared_cash > $till->actual_cash):
-                        $status = 2; //sobrante
-                        break;
-                }
+                if ($declared_cash === $till->actual_cash)
+                    $status = 0; //normal
+
+                if ($declared_cash < $till->actual_cash || $declared_cash === 0 && $till->actual_cash != 0)
+                    $status = 1; //faltante
+
+                if ($declared_cash > $till->actual_cash)
+                    $status = 2; //sobrante
+
 
                 $audit = TillAudit::create([
                     'till_id' => $till->id,
@@ -325,12 +325,15 @@ class TillController extends Controller
                 switch ($status){
                     case 0:
                         $message = 'El arqueo dio un resultado normal. Puede cerrar la caja.';
+                        $status = 'Normal';
                         break;
                     case 1:
                         $message = 'El arqueo dio como resultado: faltante de dinero';
+                        $status = 'Faltante';
                         break;
                     case 2:
                         $message = 'El arqueo dio como resultado: sobrante de dinero';
+                        $status = 'Sobrante';
                         break;
                 }
 
@@ -345,7 +348,7 @@ class TillController extends Controller
 
                 DB::commit();
 
-                return redirect()->back()->with('success', $message);
+                return response()->json(['success' => $message, 'audit' => $audit, 'status' => $status]);
             }
 
             return redirect()->back()->with('error', 'Contraseña incorrecta');

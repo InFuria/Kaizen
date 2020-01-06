@@ -1,5 +1,5 @@
-<div id="confirmModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
-    <div class="modal-dialog">
+<div id="confirmModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="modal-title"></h3>
@@ -12,9 +12,13 @@
                     <input id="till_id" name="id" type="hidden" value="">
 
                     <hr>
+                    <label class="form-group">Ingrese un monto de apertura: </label>
+                    <input class="form-control" name="op_cash" type="number" required>
 
-                    <label class="form-group">Ingrese su contraseña: </label>
-                    <input name="password" type="password">
+                    <br>
+
+                    <label class="form-group" id="passLbl">Ingrese su contraseña: </label>
+                    <input class="form-control" name="password" type="password">
                 </form>
             </div>
 

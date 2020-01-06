@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -60,6 +61,10 @@
             transition: all 0.3s;
         }*/
 
+        .collapse { visibility: hidden;}
+        .collapse.show {visibility: visible; display: block;}
+        .collapsing {position: relative; height: 0; overflow: hidden;-webkit-transition-property: height, visibility; transition-property: height, visibility;-webkit-transition-duration: 0.01s; transition-duration: 0.01s;  -webkit-transition-timing-function: ease;  transition-timing-function: ease;}
+        .collapsing.width {  -webkit-transition-property: width, visibility;  transition-property: width, visibility;  width: 0;  height: auto;}
 
 
         @yield('css')
@@ -68,14 +73,14 @@
 <body>
 <div id="app">
     <!-- Start Header -->
-    <nav class="navbar navbar-expand-md navbar-dark shadow p-0 a" style="height: 50px">
+    <nav class="navbar navbar-expand-md navbar-dark shadow p-0 a fixed-top" style="height: 50px;">
 
         <a class="navbar-brand header-nav mr-0 text-center text-black-50" href="{{ url('/') }}"
            style="background-color: #EAEA4C; height: 100%; text-decoration-line: underline; font-size: 25px">
             {{ strtoupper( config('app.name', 'Laravel')) }}
         </a>
 
-        <button class="btn btn-toolbar" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="btn btn-toolbar" type="button" data-toggle="collapse" data-target="#sidebarCollapse" aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation" id="collapseBtn">
             <span class="fas fa-bars"></span>
         </button>
 
@@ -89,7 +94,7 @@
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
                 @guest
-                    <li class="nav-item mr-1">
+                   {{-- <li class="nav-item mr-1">
                         <a class="nav-link text-black-50 login-labels"
                            href="{{ route('login') }}">{{ __('messages.login_access') }}</a>
                     </li>
@@ -98,7 +103,7 @@
                             <a class="nav-link text-black-50 login-labels"
                                href="{{ route('register') }}">{{ __('messages.register') }}</a>
                         </li>
-                    @endif
+                    @endif--}}
                 @else
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle login-labels text-black-50" href="#"
@@ -126,7 +131,7 @@
     <!-- End Header-->
 
     <!-- Start Content Block-->
-    <main class="container-fluid">
+    <main class="container-fluid mt-5">
 
         <div class="row">
             <div class="col-12">
@@ -147,7 +152,7 @@
 
                         @include('layouts.sidebar')
 
-                        <div class="col-9 pt-4">
+                        <div id="contentBody" class="col-9 pt-4">
                             @yield('content')
                         </div>
                     </div>
@@ -163,5 +168,18 @@
 </div>
 
 @yield('js')
+<script>
+    $('#collapseBtn').on('click', function () {
+        if ($('#sidebarCollapse').hasClass('show')){
+            $('#contentBody').removeClass('col-9').addClass('col-12');
+        }else {
+            $('#contentBody').removeClass('col-12').addClass('col-9');
+        }
+    });
+
+    if(! $('#sidebarCollapse').hasClass('show')){
+        $('#contentBody').removeClass('col-9').addClass('col-12');
+    }
+</script>
 </body>
 </html>

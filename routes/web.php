@@ -11,6 +11,7 @@
 |
 */
 
+
 Route::get('ticket', function (){
     return view('ticket.comprobante');
 });
@@ -42,7 +43,10 @@ Route::middleware(['auth'])->group(function () {
 
     /** StockController manage */
     /*Route::resource('stock', 'StockController');*/
+    Route::get('stock', 'StockController@index')->name('stock.index');
+    Route::get('stock/adjustment', 'StockController@adjustment')->name('stock.adjustment');
     Route::get('stock/charge', 'StockController@charge')->name('stock.charge');
+    Route::post('stock/discount', 'StockController@discount')->name('stock.discount');
     Route::post('stock/store', 'StockController@store')->name('stock.store');
     Route::get('stock/audit', ['as' => 'stock.audit', 'uses' => 'StockController@audit']); //View para gestion de auditorias de stock
 
@@ -66,15 +70,18 @@ Route::middleware(['auth'])->group(function () {
     /** Support */
     Route::get('support', 'SupportController@index');
 
+    /** Till manage */
+    Route::resource('till', 'TillController')->except(['edit', 'update', 'show', 'destroy']);
+    Route::get('till/{till}/extract', 'TillController@extract')->name('till.extract');
+    Route::get('till/{till}/charge', 'TillController@charge')->name('till.charge');
+    Route::get('till/{till}/cashCount', 'TillController@cashCount')->name('till.cashCount');
+    Route::post('till/{till}/status', 'TillController@status')->name('till.status');
+    Route::post('till/{till}/extraction', 'TillController@extraction')->name('till.extraction');
+    Route::post('till/{till}/deposit', 'TillController@deposit')->name('till.deposit');
+    Route::post('till/{till}/audit', 'TillController@audit')->name('till.audit');
 
+    /** Expenses */
+    Route::resource('expenses', 'ExpensesController');
 });
 
-/** Till manage */
-Route::resource('till', 'TillController')->except(['edit', 'update', 'show', 'destroy']);
-Route::get('till/{till}/extract', 'TillController@extract')->name('till.extract');
-Route::get('till/{till}/charge', 'TillController@charge')->name('till.charge');
-Route::get('till/{till}/cashCount', 'TillController@cashCount')->name('till.cashCount');
-Route::post('till/{till}/status', 'TillController@status')->name('till.status');
-Route::post('till/{till}/extraction', 'TillController@extraction')->name('till.extraction');
-Route::post('till/{till}/deposit', 'TillController@deposit')->name('till.deposit');
-Route::post('till/{till}/audit', 'TillController@audit')->name('till.audit');
+

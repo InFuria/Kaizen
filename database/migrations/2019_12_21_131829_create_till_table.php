@@ -20,7 +20,6 @@ class CreateTillTable extends Migration
             $table->boolean('status');
             $table->integer('opening_cash');
             $table->integer('actual_cash');
-            $table->integer('close_cash');
             $table->timestamps();
         });
 
@@ -35,7 +34,7 @@ class CreateTillTable extends Migration
             $table->foreign('till_id')->references('id')->on('till');
             $table->integer('type_id');
             $table->foreign('type_id')->references('id')->on('transaction_types');
-            $table->integer('detail_id')->comment('Detalles de sales');
+            $table->integer('detail_id')->comment('Id de detalle de transaccion');
             $table->integer('cash_before_op');
             $table->integer('cash_after_op');
             $table->integer('user_id');
