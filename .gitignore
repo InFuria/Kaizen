@@ -13,3 +13,5 @@ yarn-error.log
 .editorconfig
 .gitattributes
 .idea
+
+!/vendor/caffeinated/shinobi/migrations
