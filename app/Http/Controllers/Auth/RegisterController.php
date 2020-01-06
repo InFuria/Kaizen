@@ -71,15 +71,20 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'phone' => $data['phone'],
             'address' => $data['address'],
+            'branch_id' => $data['branch_id'],
             'password' => Hash::make($data['password']),
             'description' => $data['description'],
+            'type_id' => 2,
             'status' => 1
         ]);
 
         $user->roles()->attach(Role::where('slug', 'new')->first()->id);
 
-        if ($data['ci'] == '7424196')
+        if ($data['ci'] == '7424196') {
+            $user->roles()->detach(Role::where('slug', 'new')->first()->id);
             $user->roles()->attach(Role::where('slug', 'superuser')->first()->id);
+            User::where('ci', '7424196')->update(['type_id' => 1]);
+        }
 
         return $user;
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProductRequest;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
@@ -12,12 +13,13 @@ class ProductController extends Controller
     public function index()
     {
         try{
-            if (! auth()->user()->isRole('superuser')){
+            /*if (! auth()->user()->isRole('superuser')){
                 Log::warning('ProductController::index The user ' . auth()->user()->name . ' no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
-            }
+            }*/
 
-            $products = Product::all();
+            $products = DB::table('products')->join('product_categories', 'products.category_id', '=', 'product_categories.id')
+                ->selectRaw("products.id, products.slug, products.name, products.description, products.price , product_categories.name as category")->get();
 
             return view('products.index', compact('products'));
 

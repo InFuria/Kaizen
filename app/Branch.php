@@ -15,7 +15,7 @@ class Branch extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'address', 'phone'
+        'name', 'address', 'phone', 'code'
     ];
 
     /**
@@ -26,4 +26,8 @@ class Branch extends Model
     protected $hidden = [
         '',
     ];
+
+    public function products(){
+        return $this->belongsToMany(Product::class, 'stock')->withPivot('id');
+    }
 }

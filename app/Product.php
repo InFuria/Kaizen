@@ -26,4 +26,12 @@ class Product extends Model
     protected $hidden = [
         '',
     ];
+
+    public function branches(){
+        return $this->belongsToMany(Branch::class, 'stock');
+    }
+
+    public function invoiceDetail(){
+        return $this->belongsToMany(InvoiceDetail::class);
+    }
 }

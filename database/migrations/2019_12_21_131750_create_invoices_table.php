@@ -25,6 +25,8 @@ class CreateInvoicesTable extends Migration
             $table->foreign('payment_id')->references('id')->on('payment_methods');
             $table->integer('client_id');
             $table->foreign('client_id')->references('id')->on('users');
+            $table->integer('received');
+            $table->integer('total');
             $table->timestamps();
         });
 
@@ -35,7 +37,7 @@ class CreateInvoicesTable extends Migration
             $table->integer('product_id');
             $table->foreign('product_id')->references('id')->on('products');
             $table->integer('quantity');
-            $table->integer('total');
+            $table->integer('sub_total');
             $table->timestamps();
         });
     }

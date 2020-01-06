@@ -32,6 +32,7 @@ class CreateBranchesProductsTable extends Migration
             $table->string('type');
             $table->integer('old_quantity');
             $table->integer('new_quantity');
+            $table->integer('ext_trans')->nullable(true);
             $table->unsignedBigInteger('user_id')->unsigned()->comment('Usuario responsable de la transaccion');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

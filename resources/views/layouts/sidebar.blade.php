@@ -1,4 +1,4 @@
-<aside class="bg-dark text-dark header-nav mr-0 shadow-lg" id="sidebarCollapse" style="height: 1000px">
+<aside class="bg-dark text-dark header-nav mr-0 shadow-lg collapse width" id="sidebarCollapse" style="height: auto">
     <section class="sidebar" style="min-height: 100%">
         <ul class="nav text-white flex-column nav-pills mt-3" id="v-pills-tab" role="tablist"
             aria-orientation="vertical">
@@ -27,7 +27,7 @@
 
                 <ul class="collapse list-unstyled" id="cashierSubMenu">
                     <li class="ml-3">
-                        <a class="nav-link text-white" href="{{ route('cashier.index') }}">
+                        <a class="nav-link text-white" href="{{ route('till.index') }}">
                             <i class="fas fa-balance-scale"></i>
 
                             <span class="ml-1">Administrar Caja</span>
@@ -65,9 +65,25 @@
 
                     <li class="ml-3">
                         <a class="nav-link text-white" href="{{ route('stock.index') }}">
+                            <i class="fas fa-clipboard-list"></i>
+
+                            <span class="ml-1">Listado de Stock</span>
+                        </a>
+                    </li>
+
+                    <li class="ml-3">
+                        <a class="nav-link text-white" href="{{ route('stock.charge') }}">
                             <i class="fas fa-dolly-flatbed"></i>
 
                             <span class="ml-1">Carga de Stock</span>
+                        </a>
+                    </li>
+
+                    <li class="ml-3">
+                        <a class="nav-link text-white" href="{{ route('stock.adjustment') }}">
+                            <i class="fas fa-wrench"></i>
+
+                            <span class="ml-1">Ajuste de Stock</span>
                         </a>
                     </li>
 

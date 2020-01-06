@@ -26,9 +26,8 @@
                         <th scope="col">Identificador</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Descripcion</th>
-                        <th scope="col">Costo base</th>
                         <th scope="col">Precio Final</th>
-                        <th scope="col">Tipo de Producto</th>
+                        <th scope="col">Categoria</th>
                         <th scope="col">Acciones</th>
                     </tr>
                     </thead>
@@ -38,9 +37,8 @@
                             <td>{{ $product->slug  }}</td>
                             <td>{{ $product->name  }}</td>
                             <td>{{ $product->description  }}</td>
-                            <td>{{ $product->cost  }}</td>
                             <td>{{ $product->price  }}</td>
-                            <td>{{ $product->type  }}</td>
+                            <td>{{ ucfirst($product->category)  }}</td>
                             <td>
                                 <a type="button" class="btn btn-light fas fa-info-circle" title="Ver detalles del producto" href="{{ route('products.show', ['product' => $product->id]) }}"></a>
                                 <a type="button" class="btn btn-success fas fa-pen-square" title="Editar producto" href="{{ route('products.edit', ['product' => $product->id]) }}"></a>

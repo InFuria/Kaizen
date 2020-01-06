@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
 
 
         $this->call(RoleTableSeeder::class);
+        $this->call(DepartamentSeeder::class);
+        $this->call(BranchesSeeder::class);
     }
 
     public function truncateTables(array $tables)
