@@ -8,7 +8,7 @@ class UpdateShinobiIntegerColumns extends Migration
 {
     public function up()
     {
-        Schema::table('roles', function (Blueprint $table) {
+        /*Schema::table('roles', function (Blueprint $table) {
             $table->bigIncrements('id')->change();
         });
 
@@ -32,7 +32,7 @@ class UpdateShinobiIntegerColumns extends Migration
             $table->bigIncrements('id')->change();
             $table->unsignedBigInteger('permission_id')->change();
             $table->unsignedBigInteger('user_id')->change();
-        });
+        });*/
     }
 
     /**

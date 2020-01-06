@@ -24,7 +24,7 @@ class CreateExpensesTable extends Migration
             $table->bigIncrements('id');
             $table->string('description');
             $table->string('cost');
-            $table->integer('expenses_category');
+            $table->bigInteger('expenses_category');
             $table->foreign('expenses_category')->references('id')->on('expenses_categories');
             $table->integer('branch_id');
             $table->foreign('branch_id')->references('id')->on('branches');
