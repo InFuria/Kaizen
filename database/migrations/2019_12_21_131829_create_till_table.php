@@ -15,7 +15,7 @@ class CreateTillTable extends Migration
     {
         Schema::create('till', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('branch_id');
+            $table->bigInteger('branch_id');
             $table->foreign('branch_id')->references('id')->on('branches');
             $table->boolean('status');
             $table->integer('opening_cash');
@@ -30,9 +30,9 @@ class CreateTillTable extends Migration
 
         Schema::create('till_transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('till_id');
+            $table->bigInteger('till_id');
             $table->foreign('till_id')->references('id')->on('till');
-            $table->integer('type_id');
+            $table->bigInteger('type_id');
             $table->foreign('type_id')->references('id')->on('transaction_types');
             $table->integer('detail_id')->comment('Id de detalle de transaccion');
             $table->integer('cash_before_op');
@@ -44,9 +44,9 @@ class CreateTillTable extends Migration
 
         Schema::create('till_audit', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('till_id');
+            $table->bigInteger('till_id');
             $table->foreign('till_id')->references('id')->on('till');
-            $table->integer('user_id');
+            $table->bigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('registered_cash');
             $table->integer('declared_cash');

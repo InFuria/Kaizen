@@ -25,7 +25,8 @@ class CreateProductsTable extends Migration
             $table->string('description');
             $table->string('image');
             $table->integer('price');
-            $table->integer('category_id');
+            $table->bigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('product_categories');
             $table->timestamps();
         });
     }

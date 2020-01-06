@@ -21,9 +21,9 @@ class CreateInvoicesTable extends Migration
 
         Schema::create('invoices', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('payment_id');
+            $table->bigInteger('payment_id');
             $table->foreign('payment_id')->references('id')->on('payment_methods');
-            $table->integer('client_id');
+            $table->bigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('users');
             $table->integer('received');
             $table->integer('total');
@@ -32,9 +32,9 @@ class CreateInvoicesTable extends Migration
 
         Schema::create('invoice_detail', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('invoice_id');
+            $table->bigInteger('invoice_id');
             $table->foreign('invoice_id')->references('id')->on('invoices');
-            $table->integer('product_id');
+            $table->bigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
             $table->integer('quantity');
             $table->integer('sub_total');
