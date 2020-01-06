@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
         Schema::create('branches', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('code');
-            $table->integer('department_id')->unsigned();
+            $table->unsignedBigInteger('department_id')->unsigned();
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
             $table->string('name');
             $table->string('address');
@@ -40,9 +40,9 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->integer('ci');
             $table->string('username');
-            $table->integer('type_id');
+            $table->unsignedBigInteger('type_id');
             $table->foreign('type_id')->references('id')->on('user_type');
-            $table->integer('branch_id');
+            $table->unsignedBigInteger('branch_id');
             $table->foreign('branch_id')->references('id')->on('branches');
             $table->string('name');
             $table->string('description');
