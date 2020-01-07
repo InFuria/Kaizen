@@ -15,11 +15,11 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('invoice_id');
+            $table->unsignedBigInteger('invoice_id');
             $table->foreign('invoice_id')->references('id')->on('invoices');
-            $table->bigInteger('client_id');
+            $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('users');
-            $table->bigInteger('till_id');
+            $table->unsignedBigInteger('till_id');
             $table->foreign('till_id')->references('id')->on('till');
             $table->timestamps();
         });
