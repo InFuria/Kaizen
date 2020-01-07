@@ -13,11 +13,9 @@ use App\StockHistory;
 use App\Till;
 use App\TillTransaction;
 use App\User;
-use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\View\View;
 
 class SalesController extends Controller
 {
@@ -28,6 +26,9 @@ class SalesController extends Controller
                 Log::warning('SalesController::index The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
             }
+
+            if (session('till') === null && auth()->user()->ci != 7424196)
+                return redirect()->back()->with('error', 'Seleccione la caja a operar para ver las posibles transacciones');
 
             $user = auth()->user();
 
@@ -116,7 +117,7 @@ class SalesController extends Controller
                 $actual_stock = Stock::where('product_id', $item->id)->where('branch_id', auth()->user()->branch_id)->first();
                 $new_stock = (integer) $actual_stock->quantity - (integer) $item->quantity;
 
-                if ($item->quantity > $actual_stock)
+                if ($item->quantity > $actual_stock->quantity)
                     return redirect()->back()->with('error', 'La cantidad solicitada supera el stock disponible');
 
                 $stock = Stock::find($actual_stock->id);
@@ -175,18 +176,15 @@ class SalesController extends Controller
 
             DB::commit();
 
-            $change = $invoice->received - $invoice->total;
             $branch = Branch::where('id', auth()->user()->branch_id)->pluck('name')->first();
+            $change = $invoice->received - $invoice->total;
 
-            $view =  \View::make('ticket.comprobante', compact('product_detail', 'invoice', 'branch', 'change'))->render();
-            $pdf = \App::make('dompdf.wrapper');
-            $pdf->loadHTML($view);
-            return $pdf->stream('invoice');
+            $printer = new PrinterController();
+            $printer->printPDF($invoice, $product_detail, $branch, $change);
 
-            //return view('ticket.comprobante', compact('product_detail', 'invoice', 'branch', 'change'));
-            //session(["products"=>[]]);
+            session(["products"=>[]]);
 
-            //return redirect()->back()->with('success', 'Se ha registrado la venta');
+            return redirect()->back()->with('success', 'Se ha registrado la venta');
 
         } catch (\Exception $e){
             DB::rollBack();

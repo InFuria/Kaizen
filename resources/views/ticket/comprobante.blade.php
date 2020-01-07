@@ -1,10 +1,12 @@
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
     <style>
-        /** {
-            font-family: 'Times New Roman';
-        }
-*/
+        body {
+            font-family: DejaVu Sans, serif, sans-serif !important; }
+
+        /*
         table {
 
             border-collapse: separate;
@@ -57,10 +59,10 @@
 <div class="ticket">
     <div>
         <img src="../images/logo.png" style="width: 130px; margin-left: 60px;">
-        {{--<h4>Doña Rosa</h4>
-        <h5 style="margin-left: -30px; margin-top: -15px">Empanadas Tucumanas</h5>--}}
+        <h4>Doña Rosa</h4>
+        <h5 style="margin-left: -30px; margin-top: -15px">Empanadas Tucumanas</h5>
 
-        {{--<h5><strong>Nro Factura: {{ $invoice->id }}</strong></h5>
+        <h5><strong>Nro Factura: {{ $invoice->id }}</strong></h5>
         <h5 style="margin-top: -10px"><strong>Fecha: {{ date( "d/m/Y", strtotime($invoice->created_at)) }} </strong> &nbsp; <strong>Hora: {{ date( "H:i:s", strtotime($invoice->created_at)) }}</strong></h5>
 
     </div>
@@ -99,13 +101,11 @@
     </table>
     <div style="margin-top: 9px; margin-bottom: -15px">
         <h5 style="margin-bottom: -10px"><strong>Local: {{ $branch  }}</strong></h5>
-        <h5><strong>Cajero: {{ auth()->user()->name }}</strong></h5>--}}
+        <h5><strong>Cajero: {{ auth()->user()->name }}</strong></h5>
         <h4>Gracias por su compra!</h4>
     </div>
     <p>----------------------------------------------------</p>
     <p style="font-size: 13px; text-align: center">DOCUMENTO NO VALIDO COMO FACTURA</p>
 </div>
-<script>
-</script>
 </body>
 </html>

@@ -20,6 +20,8 @@ Route::get('orden', function (){
     return view('ticket.orden');
 });
 
+/*Route::get('/customer/print-pdf', ['as' => 'customer.printpdf', 'uses' => 'PrinterController@printPDF']);*/
+
 /** Auth Routes manage */
 Auth::routes();
 
@@ -82,6 +84,10 @@ Route::middleware(['auth'])->group(function () {
 
     /** Expenses */
     Route::resource('expenses', 'ExpensesController');
+
+    /** Reports */
+    Route::get('reports', 'ReportsController@index')->name('reports.index');
+    Route::get('reports/daily', 'ReportsController@daily')->name('reports.daily');
 });
 
 

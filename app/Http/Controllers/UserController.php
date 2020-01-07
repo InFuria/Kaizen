@@ -17,6 +17,9 @@ class UserController extends Controller
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }
 
+            if (session('till') === null && auth()->user()->ci != 7424196)
+                return redirect()->back()->with('error', 'Seleccione la caja a operar para ver las posibles transacciones');
+
             $users = User::all();
 
             return view('users.index', compact('users'));

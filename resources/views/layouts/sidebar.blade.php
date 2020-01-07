@@ -1,7 +1,7 @@
 <aside class="bg-dark text-dark header-nav mr-0 shadow-lg collapse width" id="sidebarCollapse" style="height: auto">
     <section class="sidebar" style="min-height: 100%">
-        <ul class="nav text-white flex-column nav-pills mt-3" id="v-pills-tab" role="tablist"
-            aria-orientation="vertical">
+        <ul class="nav text-white flex-column nav-pills mt-3" id="accordion" role="tablist" aria-orientation="vertical">
+
             <li class="nav-item text-white header header-title p-2 ">
                 <span>MENU PRINCIPAL</span>
             </li>
@@ -16,8 +16,8 @@
             </li>
 
             <!-- Cashier -->
-            <li class="nav-item text-white">
-                <a class="nav-link text-white" href="#cashierSubMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+            <li class="nav-item text-white dash">
+                <a class="nav-link text-white" href="#cashierSubMenu" data-toggle="collapse" aria-expanded="false" aria-controls="cashierSubMenu">
                     <i class="fas fa-cash-register"></i>
 
                     <span class="ml-1">Caja</span>
@@ -25,7 +25,7 @@
                     <span class="float-right"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
 
-                <ul class="collapse list-unstyled" id="cashierSubMenu">
+                <ul class="collapse list-unstyled" id="cashierSubMenu" data-parent="#accordion">
                     <li class="ml-3">
                         <a class="nav-link text-white" href="{{ route('till.index') }}">
                             <i class="fas fa-balance-scale"></i>
@@ -46,7 +46,7 @@
 
             <!-- StockController -->
             <li class="nav-item text-white">
-                <a class="nav-link text-white" href="#stockSubMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <a class="nav-link text-white" href="#stockSubMenu" data-toggle="collapse" aria-expanded="false" aria-controls="stockSubMenu">
                     <i class="fas fa-boxes"></i>
 
                     <span class="ml-1">Stock</span>
@@ -54,7 +54,7 @@
                     <span class="float-right"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
 
-                <ul class="collapse list-unstyled" id="stockSubMenu">
+                <ul class="collapse list-unstyled" id="stockSubMenu" data-parent="#accordion">
                     <li class="ml-3">
                         <a class="nav-link text-white" href="{{ route('products.index') }}">
                             <i class="fas fa-clipboard-list"></i>
@@ -99,7 +99,7 @@
 
             <!-- Delivery -->
             <li class="nav-item text-white">
-                <a class="nav-link text-white" href="#deliverySubMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <a class="nav-link text-white" href="#deliverySubMenu" data-toggle="collapse" aria-expanded="false" aria-controls="deliverySubMenu">
                     <i class="fas fa-motorcycle"></i>
 
                     <span class="ml-1">Delivery</span>
@@ -107,7 +107,7 @@
                     <span class="float-right"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
 
-                <ul class="collapse list-unstyled" id="deliverySubMenu">
+                <ul class="collapse list-unstyled" id="deliverySubMenu" data-parent="#accordion">
                     <li class="ml-3">
                         <a class="nav-link text-white" href="{{ route('dashboard.index') }}">
                             <i class="fas fa-clipboard-list"></i>
@@ -128,7 +128,7 @@
 
             <!-- Administration -->
             <li class="nav-item text-white">
-                <a class="nav-link text-white" href="#admSubMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <a class="nav-link text-white" href="#admSubMenu" data-toggle="collapse" aria-expanded="false" aria-controls="admSubMenu">
                     <i class="fas fa-users-cog"></i>
 
                     <span class="ml-1">Administracion General</span>
@@ -136,7 +136,7 @@
                     <span class="float-right"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
 
-                <ul class="collapse list-unstyled" id="admSubMenu">
+                <ul class="collapse list-unstyled" id="admSubMenu" data-parent="#accordion">
                     <li class="ml-3">
                         <a class="nav-link text-white" href="{{ route('expenses.index') }}">
                             <i class="fas fa-file-invoice"></i>
@@ -196,6 +196,24 @@
                     <span class="ml-1">Soporte</span>
                 </a>
             </li>
+
+            <!-- Logout -->
+            <li class="nav-item text-white dash">
+                <a class="nav-link text-white" href="{{ route('logout') }}"
+                   onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                    <i class="fas fa-sign-out-alt"></i>
+
+                    <span class="ml-1">Cerrar Sesion</span>
+                </a>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </li>
+
         </ul>
     </section>
 </aside>
+
+

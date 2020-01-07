@@ -26,7 +26,9 @@
                         <th scope="col">Identificador</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Descripcion</th>
-                        <th scope="col">Precio Final</th>
+                        <th scope="col">Precio Guaranies</th>
+                        <th scope="col">Precio Reales</th>
+                        <th scope="col">Precio Dolares</th>
                         <th scope="col">Categoria</th>
                         <th scope="col">Acciones</th>
                     </tr>
@@ -38,6 +40,8 @@
                             <td>{{ $product->name  }}</td>
                             <td>{{ $product->description  }}</td>
                             <td>{{ $product->price  }}</td>
+                            {{--<td>{{ $product->price_br  }}</td>
+                            <td>{{ $product->price_usd  }}</td>--}}
                             <td>{{ ucfirst($product->category)  }}</td>
                             <td>
                                 <a type="button" class="btn btn-light fas fa-info-circle" title="Ver detalles del producto" href="{{ route('products.show', ['product' => $product->id]) }}"></a>

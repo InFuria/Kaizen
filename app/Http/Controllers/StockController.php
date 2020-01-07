@@ -22,6 +22,9 @@ class StockController extends Controller
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
             }*/
 
+            if (session('till') === null && auth()->user()->ci != 7424196)
+                return redirect()->back()->with('error', 'Seleccione la caja a operar para ver las posibles transacciones');
+
             $stock = Stock::where('quantity', '>', 0)->where('branch_id', auth()->user()->branch_id)
                 ->join('products', 'stock.product_id', '=', 'products.id')->get();
 
@@ -46,6 +49,9 @@ class StockController extends Controller
             /*// All the product available in the branch
             $branchProducts = Branch::with('products')->find(auth()->user()->branch_id);
             $products = $branchProducts->getRelation('products')->pluck('name', 'id');*/
+
+            if (session('till') === null && auth()->user()->ci != 7424196)
+                return redirect()->back()->with('error', 'Seleccione la caja a operar para ver las posibles transacciones');
 
             $products = Product::all()->pluck('name', 'id');
 
@@ -132,6 +138,9 @@ class StockController extends Controller
                 Log::warning('StockController::adjustment The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
             }*/
+
+            if (session('till') === null && auth()->user()->ci != 7424196)
+                return redirect()->back()->with('error', 'Seleccione la caja a operar para ver las posibles transacciones');
 
             $products = Stock::where('quantity', '>', 0)->where('branch_id', auth()->user()->branch_id)
                 ->join('products', 'stock.product_id', '=', 'products.id')->pluck('products.name', 'products.id');
