@@ -24,9 +24,9 @@ class CreateExpensesTable extends Migration
             $table->bigIncrements('id');
             $table->string('description');
             $table->string('cost');
-            $table->bigInteger('expenses_category')->unsigned();
+            $table->unsignedBigInteger('expenses_category')->unsigned();
             $table->foreign('expenses_category')->references('id')->on('expenses_categories');
-            $table->bigInteger('branch_id')->unsigned();
+            $table->unsignedBigInteger('branch_id')->unsigned();
             $table->foreign('branch_id')->references('id')->on('branches');
             $table->timestamps();
         });
