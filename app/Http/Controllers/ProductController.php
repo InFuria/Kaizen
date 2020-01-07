@@ -18,6 +18,9 @@ class ProductController extends Controller
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }*/
 
+            if (session('till') === null && auth()->user()->ci != 7424196)
+                return redirect()->back()->with('error', 'Seleccione la caja a operar para ver las posibles transacciones');
+
             $products = DB::table('products')->join('product_categories', 'products.category_id', '=', 'product_categories.id')
                 ->selectRaw("products.id, products.slug, products.name, products.description, products.price , product_categories.name as category")->get();
 

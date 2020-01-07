@@ -12,8 +12,11 @@
                     <input id="till_id" name="id" type="hidden" value="">
 
                     <hr>
+
+                    <div id="openCash" hidden>
                     <label class="form-group">Ingrese un monto de apertura: </label>
-                    <input class="form-control" name="op_cash" type="number" required>
+                    <input class="form-control" name="op_cash" type="number">
+                    </div>
 
                     <br>
 

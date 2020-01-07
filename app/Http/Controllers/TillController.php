@@ -28,16 +28,21 @@ class TillController extends Controller
             $till = Till::where('branch_id', auth()->user()->branch_id)->get();
             $branch = Branch::where('id', auth()->user()->branch_id)->select('name')->first();
 
-            $selectedTill = $till[0];
+            // Se borra la sesion al seleccionar el boton flush
+            if ($request->input('flush'))
+                $request->session()->forget('till');
 
             if ($request->input('till')){
                 $selectedTill = Till::where('id', $request->input('till'))->first();
-                return view('till.index', compact('selectedTill', 'till', 'branch'));
+
+                session(['till' => $selectedTill->id]);
+
+                return view('till.index', compact( 'till', 'selectedTill', 'branch'));
             }
 
-            session(['till' => $selectedTill->id]);
-
-            return view('till.index', compact('till', 'branch', 'selectedTill'));
+            if (session('till') === null){
+                return view('till.index', compact( 'till'));
+            }
 
         } catch (\Exception $e){
             Log::error('TillController::index ' . $e->getMessage(), ['error_line' => $e->getLine()]);
@@ -130,6 +135,7 @@ class TillController extends Controller
                 if ($till->status == 0) {
                     session()->forget('audit');
                     $till_transaction->type_id= 1;
+                    session()->forget('till');
                 }
 
                 $till_transaction->till_id = $till->id;

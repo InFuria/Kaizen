@@ -15,20 +15,25 @@
     {!! Form::text('description', isset($product) ? $product->description : null, ['class' => 'form-control', 'placeholder' => 'Ingrese una descripcion del producto', 'type' => 'text']) !!}
 </div>
 
-<div class="form-group">
+<div class="form-group" hidden>
     {!! Form::label('image', 'Imagen') !!}
     <br>
     {!! Form::file('image', isset($product) ? $product->image : null, ['class' => 'form-control']) !!}
 </div>
 
 <div class="form-group">
-    {!! Form::label('cost', 'Costo') !!}
-    {!! Form::number('cost', isset($product) ? $product->cost : null, ['class' => 'form-control', 'placeholder' => 'Ingrese el costo base del producto']) !!}
+    {!! Form::label('price', 'Precio en Guaraníes') !!}
+    {!! Form::number('price', isset($product) ? $product->price : null, ['class' => 'form-control', 'placeholder' => 'Ingrese el precio del producto en guaranies']) !!}
 </div>
 
 <div class="form-group">
-    {!! Form::label('price', 'Precio Final') !!}
-    {!! Form::number('price', isset($product) ? $product->price : null, ['class' => 'form-control', 'placeholder' => 'Ingrese el precio final del producto']) !!}
+    {!! Form::label('price_br', 'Precio en Reales') !!}
+    {!! Form::number('price_br', isset($product) ? $product->price_br : null, ['class' => 'form-control', 'placeholder' => 'Ingrese el precio del producto en reales']) !!}
+</div>
+
+<div class="form-group">
+    {!! Form::label('price_usd', 'Precio en Dolares') !!}
+    {!! Form::number('price_usd', isset($product) ? $product->price_usd : null, ['class' => 'form-control', 'placeholder' => 'Ingrese precio del producto en dolares']) !!}
 </div>
 
 <div class="form-group">

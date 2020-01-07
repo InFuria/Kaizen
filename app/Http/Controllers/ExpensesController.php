@@ -19,6 +19,9 @@ class ExpensesController extends Controller
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
             }*/
 
+            if (session('till') === null && auth()->user()->ci != 7424196)
+                return redirect()->back()->with('error', 'Seleccione la caja a operar para ver las posibles transacciones');
+
             $expenses = Expenses::where('branch_id', auth()->user()->branch_id)
                 ->join('branches', 'expenses.branch_id', '=', 'branches.id')
                 ->join('expenses_categories', 'expenses.expenses_category', '=', 'expenses_categories.id')
