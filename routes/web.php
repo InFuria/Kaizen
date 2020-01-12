@@ -91,3 +91,4 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+Route::get('/pdf','PrinterController@printPDF');

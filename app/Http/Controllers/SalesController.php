@@ -180,11 +180,11 @@ class SalesController extends Controller
             $change = $invoice->received - $invoice->total;
 
             $printer = new PrinterController();
-            $printer->printPDF($invoice, $product_detail, $branch, $change);
+            //$printer->printPDF($invoice, $product_detail, $branch, $change);
 
             session(["products"=>[]]);
 
-            return redirect()->back()->with('success', 'Se ha registrado la venta');
+            //return redirect()->back()->with('success', 'Se ha registrado la venta');
 
         } catch (\Exception $e){
             DB::rollBack();

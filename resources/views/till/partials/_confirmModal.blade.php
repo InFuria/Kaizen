@@ -13,7 +13,7 @@
 
                     <hr>
 
-                    <div id="openCash" hidden>
+                    <div id="openCash">
                     <label class="form-group">Ingrese un monto de apertura: </label>
                     <input class="form-control" name="op_cash" type="number">
                     </div>
