@@ -7,7 +7,7 @@
         Gestión de Roles <small class="text-black-50 font-italic">Editar</small>
     </h2>
 
-    <div class="card col-6">
+    <div class="card col-xl-6 col-lg-10">
         <div class="card-body">
             {!! Form::model($role, ['route' => ['roles.update', $role->id], 'method' => 'POST']) !!}
             @method('PATCH')

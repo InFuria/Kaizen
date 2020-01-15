@@ -13,6 +13,7 @@ use App\StockHistory;
 use App\Till;
 use App\TillTransaction;
 use App\User;
+use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -82,12 +83,18 @@ class SalesController extends Controller
             // ============================= INVOICE CREATION ==================================
             $branch_id = Branch::where('id', auth()->user()->branch_id)->pluck('code')->first();
             $user_code = (integer) substr((string) auth()->user()->ci, -3);
-            $previous_id = Invoice::whereRaw('id = (select max(id) from invoices)')->pluck('id')->first();
+            $init = $branch_id . $user_code;
+            //$previous_id = Invoice::whereRaw("id like '" . $init . "%'")->select('max(id) from invoices')->toSql();
 
-            if ($previous_id == null)
-                $id = $branch_id . $user_code . 1;
+            $previous_id = Invoice::whereRaw("id = (select max(id) from invoices where id like '" . $branch_id . $user_code . "%')")->pluck('id')->first();
 
-            if ($previous_id != null && $previous_id > 0)
+
+            if ($previous_id == null) {
+                $pre_id = $branch_id . $user_code;
+                $id = str_pad($pre_id, 10, "0", STR_PAD_RIGHT);
+            }
+
+            if ($previous_id != null)
                 $id = $previous_id + 1;
 
 
@@ -155,7 +162,9 @@ class SalesController extends Controller
 
             // ============================= TILL_TRANSACTION ==================================
 
-            $inv_total = Invoice::where('id', $invoice->id)->update(['total' => $sum]);
+            $invoice = Invoice::find($invoice->id);
+            $invoice->total = $sum;
+            $invoice->save();
 
             foreach (session('products') as $item) {
                 $old_quantity = Stock::where('product_id', $item->id)->where('branch_id', auth()->user()->branch_id)->first();
@@ -176,11 +185,12 @@ class SalesController extends Controller
 
             DB::commit();
 
+
             $branch = Branch::where('id', auth()->user()->branch_id)->pluck('name')->first();
             $change = $invoice->received - $invoice->total;
 
             $printer = new PrinterController();
-            $printer->printPDF($invoice, $product_detail, $branch, $change);
+            $printer->printPDF($invoice, $product_detail['products'], $branch, $change, $order);
 
             session(["products"=>[]]);
 

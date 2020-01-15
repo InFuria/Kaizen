@@ -37,7 +37,7 @@ class CreateTillTable extends Migration
             $table->integer('detail_id')->comment('Id de detalle de transaccion');
             $table->integer('cash_before_op');
             $table->integer('cash_after_op');
-            $table->integer('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });

@@ -111,9 +111,9 @@
             modal.find('#myForm #till_id').val(id);
             modal.find('#myForm').attr('action', '/till/' + id + '/status');
 
-            if( $('#statusOptions i').hasClass('fas fa-toggle-off fa-5x')){
+            /*if( $('#statusOptions i').hasClass('fas fa-toggle-off fa-5x')){
                 $('#openCash').show();
-            }
+            }*/
         });
 
         $('#final-options').hide();

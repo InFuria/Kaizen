@@ -58,7 +58,9 @@ class TillController extends Controller
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }*/
 
-            return view('till.create');
+            $branches = Branch::all()->pluck('name', 'id');
+
+            return view('till.create', compact('branches'));
 
         } catch (\Exception $e){
             Log::error('TillController::create ' . $e->getMessage(), ['error_line' => $e->getLine()]);

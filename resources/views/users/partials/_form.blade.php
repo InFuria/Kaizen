@@ -26,6 +26,11 @@
 </div>
 
 <div class="form-group">
+    {!! Form::label('branch_id', 'Sucursal') !!}
+    {!! Form::select('branch_id', isset($branches) ? $branches : ['name' => '...'], null, ['class' => 'form-control', 'id' => 'branch_id']) !!}
+</div>
+
+<div class="form-group">
     {!! Form::label('email', 'Email') !!}
     {!! Form::email('email', isset($user) ? $user->email : null, ['class' => 'form-control', 'placeholder' => 'Ingrese su correo electronico']) !!}
 </div>

@@ -21,15 +21,17 @@
 
                     {!! Form::close() !!}
                 @else
-                    <label><strong>Cliente: </strong></label>
-                    <input class="form-control btn-lg" style="width: 350px;" value="{{ $client->name }}" disabled>
 
-                    <br>
 
                     <div class="row">
+                        <div class="form-group col-xl-3 col-lg-5">
+                            <label><strong>Cliente: </strong></label>
+                            <input class="form-control btn-lg" style="width: 350px;" value="{{ $client->name }}" disabled>
+                        </div>
+
                         <div class="form-group col-xl-2 col-lg-3">
                             <label><strong>Tipo de Comprobante: </strong></label>
-                            <select class="form-control" style="width: 150px" disabled>
+                            <select class="form-control btn-lg" style="width: 150px" disabled>
                                 <option value="init">...</option>
                                 <option value="ticket">Ticket</option>
                                 <option value="invoice">Factura</option>
@@ -38,14 +40,14 @@
 
                         <div class="form-group col-xl-2 col-lg-3">
                             <label><strong>Metodo de pago: </strong></label>
-                            <select class="form-control" style="width: 150px" disabled>
+                            <select class="form-control btn-lg" style="width: 150px" disabled>
                                 <option value="init">...</option>
                                 <option value="cash">Efectivo</option>
                                 <option value="plastic">Tarjeta</option>
                             </select>
                         </div>
 
-                        <div class="form-group col-xl-2 col-lg-3">
+                        <div class="form-group col-xl-2 col-lg-3" hidden>
                             <label><strong>Codigo de Sucursal: </strong></label>
                             <input class="form-control" style="width: 325px;" value="{{ $branch->code }}" disabled>
                         </div>
@@ -90,13 +92,14 @@
 
                         {!! Form::hidden('total_received', null, ['id' => 'total_received']) !!}
 
-                        <div class="form-group col-12">
-                            <button class="btn btn-success btn-lg" type="button" id="btnAdd" onclick="addProduct()"
-                                    style="margin-top: 30px">Agregar
-                            </button>
-                            <a class="btn btn-warning btn-lg" href="{{ route('sales.index', ['client' => $client->ci]) }}" style="margin-top: 30px" onclick="{{ session(["products"=>[]]) }}">Limpiar</a>
 
-                            <a class="btn btn-danger btn-lg" href="{{ route('sales.index') }}" style="margin-top: 30px" onclick="{{ session(["products"=>[]]) }}">Cancelar</a>
+                        <div class="form-group col-12" style="margin-bottom: -10px">
+                            <button class="btn btn-success btn-lg" type="button" id="btnAdd" onclick="addProduct()">
+                                Agregar
+                            </button>
+                            <a class="btn btn-warning btn-lg" href="{{ route('sales.index', ['client' => $client->ci]) }}" onclick="{{ session(["products"=>[]]) }}">Limpiar</a>
+
+                            <a class="btn btn-danger btn-lg" href="{{ route('sales.index') }}" onclick="{{ session(["products"=>[]]) }}">Cancelar</a>
                         </div>
                     </div>
                 </div>

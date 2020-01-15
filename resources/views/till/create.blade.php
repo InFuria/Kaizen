@@ -7,7 +7,7 @@
         Gestión de Caja <small class="text-black-50 font-italic">Crear</small>
     </h2>
 
-    <div class="card col-6">
+    <div class="card col-xl-6 col-lg-10">
         <div class="card-body">
             {!! Form::open(['route' => 'till.store', 'method' => 'POST']) !!}
             @include('till.partials._form', ['btnLabel' => 'REGISTRAR'])
@@ -26,4 +26,12 @@
             </ul>
         </div>
     @endif
+@endsection
+
+@section('js')
+    <script>
+        $(document).ready(function () {
+            $('#footer').addClass('fixed-bottom');
+        });
+    </script>
 @endsection

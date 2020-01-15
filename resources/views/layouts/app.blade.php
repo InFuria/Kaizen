@@ -182,4 +182,7 @@
     }
 </script>
 </body>
+<footer class="footer " id="footer" style="background-color: #EAEA4C;">
+    <p>&copy; Copyright 2019 - 2020, Eliana Gimenez. All rights reserved</p>
+</footer>
 </html>
