@@ -23,10 +23,10 @@ class CreateProductsTable extends Migration
             $table->string('slug');
             $table->string('name');
             $table->string('description');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->integer('price');
-            $table->integer('price_br');
-            $table->integer('price_usd');
+            $table->integer('price_br')->nullable();
+            $table->integer('price_usd')->nullable();
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('product_categories');
             $table->timestamps();

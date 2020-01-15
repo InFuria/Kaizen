@@ -30,18 +30,10 @@ class CreateUsersTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('user_type', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->timestamps();
-        });
-
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('ci');
             $table->string('username');
-            $table->unsignedBigInteger('type_id');
-            $table->foreign('type_id')->references('id')->on('user_type');
             $table->unsignedBigInteger('branch_id');
             $table->foreign('branch_id')->references('id')->on('branches');
             $table->string('name');

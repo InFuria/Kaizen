@@ -92,6 +92,7 @@
 
                         {!! Form::hidden('total_received', null, ['id' => 'total_received']) !!}
 
+
                         <div class="form-group col-12" style="margin-bottom: -10px">
                             <button class="btn btn-success btn-lg" type="button" id="btnAdd" onclick="addProduct()">
                                 Agregar

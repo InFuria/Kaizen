@@ -7,7 +7,7 @@
         Gestión de Productos <small class="text-black-50 font-italic">Crear</small>
     </h2>
 
-    <div class="card col-6">
+    <div class="card col-xl-6 col-lg-10">
         <div class="card-body">
             {!! Form::open(['route' => 'products.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
             @include('products.partials._form', ['btnLabel' => 'REGISTRAR'])

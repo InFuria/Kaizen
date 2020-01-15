@@ -7,7 +7,7 @@
         Gestión de Usuarios <small class="text-black-50 font-italic">Editar</small>
     </h2>
 
-    <div class="card col-6">
+    <div class="card col-xl-6 col-lg-10">
         <div class="card-body">
             {!! Form::model($user, ['route' => ['users.update', $user->id], 'method' => 'POST']) !!}
             @method('PATCH')

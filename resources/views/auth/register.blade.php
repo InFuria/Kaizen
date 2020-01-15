@@ -6,8 +6,9 @@
 
     body {
     background-image: url({{ URL::asset('../images/empanada_argentina.jpg') }} );
-    background-size: 1024px 768px;
+    background-size: 1024px 100%;
     background-repeat: no-repeat;
+    margin-bottom: 10px;
     }
 
     @media only screen and (min-width: 1025px) {
@@ -112,30 +113,13 @@
                             </div>
                         </div>
 
-
-
-                        {!! Form::hidden('branch_id', 1) !!}
-
-                        {{--<div class="form-group row">
-                            <label for="branches" class="col-md-4 col-form-label text-md-right">{{ __('messages.branches') }}</label>
+                        <div class="form-group row">
+                            {!! Form::label('branch_id', 'Sucursal', ['class' => 'col-md-4 col-form-label text-md-right']) !!}
 
                             <div class="col-md-6">
-                                --}}{{--{!! Form::select('branches', isset($branches) ? $branches : null, ['class' => 'form-control', 'placeholder' => 'Seleccione una sucursal']) !!}--}}{{--
-                                <select class="form-control">{!! isset($branches) ? $branches : null !!}</select>
-                                @error('branches')
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                {!! Form::select('branch_id', isset($branches) ? $branches : ['name' => '...'], null, ['class' => 'form-control btn-xl', 'id' => 'branch_id']) !!}
                             </div>
-                        </div>--}}
-
-
-
-
-
-
-
+                        </div>
 
                         <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('messages.password') }}</label>

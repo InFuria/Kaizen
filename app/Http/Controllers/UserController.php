@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Branch;
 use App\Http\Requests\UserRequest;
 use App\User;
 use Caffeinated\Shinobi\Models\Role;
@@ -40,7 +41,9 @@ class UserController extends Controller
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }
 
-            return view('users.create');
+            $branches = Branch::all()->pluck('name', 'id');
+
+            return view('users.create', compact('branches'));
 
         } catch (\Exception $e){
             \Log::error('UserController::create ' . $e->getMessage(), ['error_line' => $e->getLine()]);

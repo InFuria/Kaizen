@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Branch;
 use App\User;
 use App\Http\Controllers\Controller;
 use Caffeinated\Shinobi\Models\Role;
@@ -74,7 +75,6 @@ class RegisterController extends Controller
             'branch_id' => $data['branch_id'],
             'password' => Hash::make($data['password']),
             'description' => $data['description'],
-            'type_id' => 2,
             'status' => 1
         ]);
 
@@ -83,9 +83,15 @@ class RegisterController extends Controller
         if ($data['ci'] == '7424196') {
             $user->roles()->detach(Role::where('slug', 'new')->first()->id);
             $user->roles()->attach(Role::where('slug', 'superuser')->first()->id);
-            User::where('ci', '7424196')->update(['type_id' => 1]);
         }
 
         return $user;
+    }
+
+
+    public function showRegistrationForm()
+    {
+        $branches = Branch::all()->pluck('name', 'id');
+        return view('auth.register', compact('branches'));
     }
 }
