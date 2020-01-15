@@ -6,10 +6,10 @@
         body {
             font-family: Nunito }
 
-        .ticket {
+        /*.ticket {
             width: 283px;
             max-width: 280px;
-        }
+        }*/
         .detail{
             text-align: end !important;
         }
@@ -81,9 +81,14 @@
         <h5><strong>Cajero: {{ auth()->user()->name }}</strong></h5>
         <h4>Gracias por su compra!</h4>
     </div>
-    <p>----------------------------------------------------</p>
+    <p>--------------------------------------------</p>
     <p style="font-size: 13px; text-align: center">DOCUMENTO NO VALIDO COMO FACTURA</p>
 </div>
+<script>
+
+        window.print();
+
+</script>
 </body>
 </html>
 

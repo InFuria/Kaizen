@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Log;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
+use Illuminate\Support\Facades\View;
 
 class PrinterController extends Controller
 {
@@ -20,11 +21,11 @@ class PrinterController extends Controller
                 'order' => $order
             ];
 
-            $pdf = PDF::loadView('ticket.comprobante', $data)->setOption('page-width', '76');
+            return View::make('ticket.comprobante', $data);
 
-            $filename = base_path('storage/invoices/'.$invoice->id.'.pdf');
-            $pdf->save($filename);
-            
+            //$filename = base_path('storage/invoices/'.$invoice->id.'.pdf');
+            //$pdf->save($filename);
+
 
         } catch (\Exception $e){
             Log::error('PrinterController::pdf ' . $e->getMessage(), ['error_line' => $e->getLine()]);

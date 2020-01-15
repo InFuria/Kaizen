@@ -17,6 +17,7 @@ use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 
 class SalesController extends Controller
 {
@@ -192,9 +193,9 @@ class SalesController extends Controller
             $printer = new PrinterController();
             $printer->printPDF($invoice, $product_detail['products'], $branch, $change, $order);
 
-            session(["products"=>[]]);
+            /*session(["products"=>[]]);
 
-            return redirect()->back()->with('success', 'Se ha registrado la venta');
+            return redirect()->back()->with('success', 'Se ha registrado la venta');*/
 
         } catch (\Exception $e){
             DB::rollBack();
