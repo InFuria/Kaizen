@@ -24,7 +24,6 @@
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
-        "animate.css": "^3.7.2",
         "nonblockjs": "^1.0.8",
         "selectize": "^0.12.6"
     }

@@ -99,6 +99,12 @@
             $('#selectModal').modal('show');
         @endif
 
+        $('#openCash').hide();
+
+        @if(isset(App\Till::where('id', session('till'))->first()->status) && App\Till::where('id', session('till'))->first()->status != 1)
+        $('#openCash').show();
+        @endif
+
         $('#confirmModal').on('show.bs.modal', function (event) {
             var button  = $(event.relatedTarget);
             var modal   = $(this);

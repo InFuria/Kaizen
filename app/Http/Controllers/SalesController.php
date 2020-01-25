@@ -13,10 +13,12 @@ use App\StockHistory;
 use App\Till;
 use App\TillTransaction;
 use App\User;
-use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
+use Barryvdh\DomPDF\Facade as PDF;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 
 class SalesController extends Controller
 {
@@ -50,9 +52,9 @@ class SalesController extends Controller
                 $branch = Branch::where('id', auth()->user()->branch_id)->first();
 
                 // All the product available in the branch
-                $branchProducts = Branch::with('products')->find(auth()->user()->branch_id);
-                $products = $branchProducts->getRelation('products')->pluck('name', 'id');
-
+                $products = Stock::where('branch_id', auth()->user()->branch_id)
+                    ->join('products', 'stock.product_id', '=', 'products.id')
+                    ->where('quantity', '>', 0)->pluck('products.name', 'products.id');
 
                 return view('sales.index', compact('client', 'user', 'branch', 'products'));
             }
@@ -83,9 +85,6 @@ class SalesController extends Controller
             // ============================= INVOICE CREATION ==================================
             $branch_id = Branch::where('id', auth()->user()->branch_id)->pluck('code')->first();
             $user_code = (integer) substr((string) auth()->user()->ci, -3);
-            $init = $branch_id . $user_code;
-            //$previous_id = Invoice::whereRaw("id like '" . $init . "%'")->select('max(id) from invoices')->toSql();
-
             $previous_id = Invoice::whereRaw("id = (select max(id) from invoices where id like '" . $branch_id . $user_code . "%')")->pluck('id')->first();
 
 
@@ -155,7 +154,7 @@ class SalesController extends Controller
 
             $sales = new Sales();
             $sales->invoice_id = $invoice->id;
-            $sales->client_id = auth()->user()->id;
+            $sales->user_id = auth()->user()->id;
             $sales->till_id = session('till');
             $sales->save();
 
@@ -185,22 +184,39 @@ class SalesController extends Controller
 
             DB::commit();
 
-
             $branch = Branch::where('id', auth()->user()->branch_id)->pluck('name')->first();
             $change = $invoice->received - $invoice->total;
 
-            $printer = new PrinterController();
-            $printer->printPDF($invoice, $product_detail['products'], $branch, $change, $order);
 
-            session(["products"=>[]]);
+            $data = [
+                'invoice' => $invoice,
+                'product_detail' => $product_detail['products'],
+                'branch' =>  $branch,
+                'change' => $change,
+                'order' => $order
+            ];
 
-            return redirect()->back()->with('success', 'Se ha registrado la venta');
+            $view = View::make('ticket.invoice', $data);
+            return $view->render();
 
         } catch (\Exception $e){
             DB::rollBack();
             Log::error('SalesController::store ' . $e->getMessage(), ['error_line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
         }
+    }
+
+    public function order(Request $request){
+
+    }
+
+    public function salesEnd(){
+
+        session(["products"=>[]]);
+
+        session()->flash('success', 'Se ha registrado la venta!');
+
+        return 'success';
     }
 
     public function addProduct(Request $request){

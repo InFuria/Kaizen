@@ -2,47 +2,34 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
+
     <style>
         body {
             font-family: Nunito }
 
-        .ticket {
-            width: 283px;
-            max-width: 280px;
-        }
         .detail{
             text-align: end !important;
         }
-
-        /*img {
-            max-width: inherit;
-            width: inherit;
-        }*/
-
     </style>
 </head>
 <body>
-<div class="ticket">
+<div class="ticket" id="masterContent">
     <div>
-        <img src="../images/logo.png" style="width: 130px; margin-left: 60px;">
-
-        {{--<h4 style="margin-top: 5;margin-left: 80px">Doña Rosa</h4>
-        <h5 style="margin-top: -15px; margin-left: 55px">Empanadas Tucumanas</h5>--}}
-
-        <h4><strong>Nro de Orden: {{ $order->id }}</strong></h4>
+        <div><img src="{{ asset("/images/logo-bw.png") }}" style="width: 130px; margin-left: 60px;"></div>
+        <h4><strong>Nro de Orden: </strong>{{ $order->id }}</h4>
         <br>
-        <h5 style="margin-top: -15px"><strong>Nro Factura: {{ $invoice->id }}</strong></h5>
-        <h5 style="margin-top: -10px"><strong>Fecha: {{ date( "d/m/Y", strtotime($invoice->created_at)) }} </strong> &nbsp; <strong>Hora: {{ date( "H:i:s", strtotime($invoice->created_at)) }}</strong></h5>
+        <h5 style="margin-top: -15px"><strong>Nro Factura: </strong>{{ $invoice->id }}</h5>
+        <h5 style="margin-top: -10px">Fecha: {{ date( "d/m/Y", strtotime($invoice->created_at)) }} &nbsp; Hora: {{ date( "H:i:s", strtotime($invoice->created_at)) }}</h5>
 
     </div>
 
     <table>
         <hr>
-        {{--<caption style="caption-side: top; /*margin-top: -20px; margin-bottom: -10px*/">===============================</caption>
-        <caption style="caption-side: bottom; /*margin-top: 5px; margin-bottom: -10px*/">===============================</caption>--}}
         <thead>
         <tr style="font-size: 17px">
-            <td {{--style="margin-right: -15px"--}}><strong>Articulo</strong></td>
+            <td><strong>Articulo</strong></td>
             <td><strong>Cant.</strong></td>
             <td style="padding-left: 10px"><strong>Precio</strong></td>
             <td style="padding-left: 20px; text-align: right"><strong>Sub Total</strong></td>
@@ -77,11 +64,11 @@
     </table>
     <hr>
     <div style="margin-top: 9px; margin-bottom: -15px">
-        <h5 style="margin-bottom: -10px"><strong>Local: {{ $branch  }}</strong></h5>
-        <h5><strong>Cajero: {{ auth()->user()->name }}</strong></h5>
+        <h5 style="margin-bottom: -10px"><strong>Local: </strong>{{ $branch  }}</h5>
+        <h5><strong>Cajero: </strong>{{ auth()->user()->name }}</h5>
         <h4>Gracias por su compra!</h4>
     </div>
-    <p>----------------------------------------------------</p>
+    <p>--------------------------------------------</p>
     <p style="font-size: 13px; text-align: center">DOCUMENTO NO VALIDO COMO FACTURA</p>
 </div>
 </body>

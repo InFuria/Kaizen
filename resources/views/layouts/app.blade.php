@@ -21,6 +21,10 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('fontawesome/css/all.css') }}" rel="stylesheet">
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" rel="stylesheet">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.es.min.js"></script>
+
     <style>
         .login-labels {
             font-size: 17px;
@@ -32,7 +36,7 @@
         }
 
         .header-nav {
-            width: 250px;
+            width: 200px;
         }
 
         .header-title {
@@ -43,29 +47,10 @@
             background-image: linear-gradient(90deg, #EAEA4C 10%, lightsalmon, lightpink 90%);
         }
 
-        /* Sidebar config*/
-        /*.wrapper {
-            display: flex;
-            width: 100%;
-        }
-
-        #sidebar {
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            z-index: 999;
-            background: #7386D5;
-            color: #fff;
-            transition: all 0.3s;
-        }*/
-
         .collapse { visibility: hidden;}
         .collapse.show {visibility: visible; display: block;}
         .collapsing {position: relative; height: 0; overflow: hidden;-webkit-transition-property: height, visibility; transition-property: height, visibility;-webkit-transition-duration: 0.01s; transition-duration: 0.01s;  -webkit-transition-timing-function: ease;  transition-timing-function: ease;}
         .collapsing.width {  -webkit-transition-property: width, visibility;  transition-property: width, visibility;  width: 0;  height: auto;}
-
 
         @yield('css')
     </style>
@@ -75,8 +60,8 @@
     <!-- Start Header -->
     <nav class="navbar navbar-expand-md navbar-dark shadow p-0 a fixed-top" style="height: 50px;">
 
-        <a class="navbar-brand header-nav mr-0 text-center text-black-50" href="{{ url('/') }}"
-           style="background-color: #EAEA4C; height: 100%; text-decoration-line: underline; font-size: 25px">
+        <a class="navbar-brand mr-0 header-nav text-center text-black-50" href="{{ url('/') }}"
+           style="background-color: #EAEA4C; height: 100%; text-decoration-line: underline; font-size: 25px; width: 200px">
             {{ strtoupper( config('app.name', 'Laravel')) }}
         </a>
 
@@ -150,7 +135,9 @@
                 @if(Auth::check())
                     <div class="row">
 
-                        @include('layouts.sidebar')
+                        <div class="col-2 mt-0 p-0">
+                            @include('layouts.sidebar')
+                        </div>
 
                         <div id="contentBody" class="col-9 pt-4">
                             @yield('content')
@@ -182,7 +169,7 @@
     }
 </script>
 </body>
-<footer class="footer " id="footer" style="background-color: #EAEA4C;">
+<footer class="footer fixed-bottom" id="footer" style="background-color: #EAEA4C; margin-bottom: -15px">
     <p>&copy; Copyright 2019 - 2020, Eliana Gimenez. All rights reserved</p>
 </footer>
 </html>

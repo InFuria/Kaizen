@@ -13,14 +13,15 @@
 
 
 Route::get('ticket', function (){
-    return view('ticket.comprobante');
+    return view('ticket.invoice');
 });
 
 Route::get('orden', function (){
-    return view('ticket.orden');
+    return view('ticket.order');
 });
 
-/*Route::get('/customer/print-pdf', ['as' => 'customer.printpdf', 'uses' => 'PrinterController@printPDF']);*/
+/*Route::get('/customer/print-pdf', ['as' => 'customer.printpdf', 'uses' => 'PrinterController@printPDF']);*
+
 
 /** Auth Routes manage */
 Auth::routes();
@@ -55,10 +56,6 @@ Route::middleware(['auth'])->group(function () {
     /** Delivery manage */
     Route::resource('delivery', 'DeliveryController');
 
-
-    /** Reports manage */
-    Route::resource('reports', 'ReportsController');
-
     /** Products manage */
     Route::resource('products', 'ProductController');
 
@@ -68,6 +65,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('sales/removeProduct', 'SalesController@removeProduct')->name('sales.removeProduct');
     Route::post('sales/addProduct', 'SalesController@addProduct')->name('sales.addProduct');
     Route::post('sales/store', 'SalesController@store')->name('sales.store');
+    Route::get('sales/salesEnd', 'SalesController@salesEnd')->name('sales.salesEnd');
+    //Route::get('sales/order', 'SalesController@order')->name('sales.order');
 
     /** Support */
     Route::get('support', 'SupportController@index');
@@ -85,10 +84,12 @@ Route::middleware(['auth'])->group(function () {
     /** Expenses */
     Route::resource('expenses', 'ExpensesController');
 
+
     /** Reports */
     Route::get('reports', 'ReportsController@index')->name('reports.index');
     Route::get('reports/daily', 'ReportsController@daily')->name('reports.daily');
+    Route::get('reports/daily_products', 'ReportsController@dailyProducts')->name('reports.daily_products');
+    Route::get('reports/tillHistory', 'ReportsController@tillHistory')->name('reports.tillHistory');
 });
-
 
 Route::get('/pdf','PrinterController@printPDF');
