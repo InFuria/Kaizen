@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade as PDF;
+use Dompdf\Dompdf;
 use Illuminate\Support\Facades\Log;
-use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
-use Illuminate\Support\Facades\View;
+
 
 class PrinterController extends Controller
 {
@@ -12,8 +13,7 @@ class PrinterController extends Controller
 
         try{
 
-            // This  $data array will be passed to our PDF blade
-            $data = [
+           $data = [
                 'invoice' => $invoice,
                 'product_detail' => $products,
                 'branch' =>  $branch,
@@ -21,10 +21,18 @@ class PrinterController extends Controller
                 'order' => $order
             ];
 
-            return View::make('ticket.comprobante', $data);
+            $invoice = PDF::loadView('ticket.invoice', $data)->setPaper([20, 0, 272, 1154], 'portrait');
+            return $invoice->stream('test.pdf');
 
-            //$filename = base_path('storage/invoices/'.$invoice->id.'.pdf');
-            //$pdf->save($filename);
+            /*$viewhtml = \View::make('ticket.invoice', $data)->render();
+
+            $dompdf = new Dompdf();
+            $dompdf->loadHtml($viewhtml);
+            $dompdf->setPaper([20, 0, 272, 1154], 'portrait');
+            $dompdf->setBasePath('/../invoices/');
+            $dompdf->render();
+            $dompdf->stream();*/
+
 
 
         } catch (\Exception $e){

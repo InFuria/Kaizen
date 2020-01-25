@@ -26,8 +26,7 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('branch_id', 'Sucursal') !!}
-    {!! Form::select('branch_id', isset($branches) ? $branches : ['name' => '...'], null, ['class' => 'form-control', 'id' => 'branch_id']) !!}
+    {!! Form::hidden('branch_id', auth()->user()->branch_id, ['id' => 'branch_id']) !!}
 </div>
 
 <div class="form-group">

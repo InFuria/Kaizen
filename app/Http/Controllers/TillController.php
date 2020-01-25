@@ -44,6 +44,11 @@ class TillController extends Controller
                 return view('till.index', compact( 'till'));
             }
 
+            if (session('till')){
+                $selectedTill = Till::where('id', session('till'))->first();
+                return view('till.index', compact('selectedTill', 'branch'));
+            }
+
         } catch (\Exception $e){
             Log::error('TillController::index ' . $e->getMessage(), ['error_line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
@@ -87,7 +92,7 @@ class TillController extends Controller
 
             $till_transaction = new TillTransaction();
             $till_transaction->till_id = $till->id;
-            $till_transaction->type_id= 14;
+            $till_transaction->type_id= $this->typeTransaction('create_till');
             $till_transaction->detail_id = 0;
             $till_transaction->cash_before_op = 0;
             $till_transaction->cash_after_op = 0;
@@ -121,29 +126,33 @@ class TillController extends Controller
 
                 $till = Till::find($id);
                 $till_transaction = new TillTransaction();
-                $till_transaction->type_id= 2;
 
-                if ($till->status === true && ! session('audit')){
+                if ($till->status == 1 && ! session('audit')){
                     return redirect()->back()->with('error', 'Por favor realice un arqueo de caja antes de cerrar la misma');
                 }
 
-                if ($till->status === false){
+                if ($till->status == 0){
+                    $till_transaction->type_id= $this->typeTransaction('till_open');
                     $till->opening_cash = $request->op_cash;
+                    $till->actual_cash = $request->op_cash;
+                    $till->status = 1;
+                }else {
+                    $till_transaction->type_id= $this->typeTransaction('till_close');
+                    $till->status = 0;
                 }
 
-                $till->status = ! $till->status;
                 $till->save();
 
                 if ($till->status == 0) {
                     session()->forget('audit');
-                    $till_transaction->type_id= 1;
                     session()->forget('till');
                 }
 
+                // modificar
                 $till_transaction->till_id = $till->id;
                 $till_transaction->detail_id = 0;
-                $till_transaction->cash_before_op = 0;
-                $till_transaction->cash_after_op = 0;
+                $till_transaction->cash_before_op = $till->status === false ? $request->op_cash : $till->actual_cash;
+                $till_transaction->cash_after_op = $till->actual_cash;
                 $till_transaction->user_id = auth()->user()->id;
                 $till_transaction->save();
 
@@ -201,7 +210,7 @@ class TillController extends Controller
 
                 $till_transaction = new TillTransaction();
                 $till_transaction->till_id = $till->id;
-                $till_transaction->type_id= 1;
+                $till_transaction->type_id= $this->typeTransaction('extract_till');
                 $till_transaction->detail_id = 0;
                 $till_transaction->cash_before_op = $actual_cash;
                 $till_transaction->cash_after_op = $till->actual_cash;
@@ -258,7 +267,7 @@ class TillController extends Controller
 
                 $till_transaction = new TillTransaction();
                 $till_transaction->till_id = $till->id;
-                $till_transaction->type_id= 2;
+                $till_transaction->type_id= $this->typeTransaction('deposit_till');
                 $till_transaction->detail_id = 0;
                 $till_transaction->cash_before_op = $actual_cash;
                 $till_transaction->cash_after_op = $till->actual_cash;
@@ -347,7 +356,7 @@ class TillController extends Controller
 
                 $till_transaction = new TillTransaction();
                 $till_transaction->till_id = $till->id;
-                $till_transaction->type_id= 4;
+                $till_transaction->type_id= $this->typeTransaction('audit');
                 $till_transaction->detail_id = $audit->id;
                 $till_transaction->cash_before_op = $till->actual_cash;
                 $till_transaction->cash_after_op = $till->actual_cash;
@@ -367,6 +376,15 @@ class TillController extends Controller
             return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
         }
 
+    }
+
+
+    /** HELPERS */
+    public function typeTransaction($type){
+
+        $type = \DB::table('transaction_types')->where('name', $type)->first()->id;
+
+        return $type;
     }
 
 }

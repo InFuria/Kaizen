@@ -1,4 +1,4 @@
-<aside class="bg-dark text-dark header-nav mr-0 shadow-lg collapse width" id="sidebarCollapse" style="height: auto">
+<aside class="bg-dark text-dark mr-0 header-nav shadow-lg collapse" id="sidebarCollapse" style="height: auto;">
     <section class="sidebar" style="min-height: 100%">
         <ul class="nav text-white flex-column nav-pills mt-3" id="accordion" role="tablist" aria-orientation="vertical">
 
@@ -87,7 +87,7 @@
                         </a>
                     </li>
 
-                    <li class="ml-3">
+                    <li class="ml-3" hidden>
                         <a class="nav-link text-white" href="{{ route('stock.audit') }}">
                             <i class="fas fa-calculator"></i>
 
@@ -98,7 +98,7 @@
             </li>
 
             <!-- Delivery -->
-            <li class="nav-item text-white">
+            <li class="nav-item text-white" hidden>
                 <a class="nav-link text-white" href="#deliverySubMenu" data-toggle="collapse" aria-expanded="false" aria-controls="deliverySubMenu">
                     <i class="fas fa-motorcycle"></i>
 
@@ -131,7 +131,7 @@
                 <a class="nav-link text-white" href="#admSubMenu" data-toggle="collapse" aria-expanded="false" aria-controls="admSubMenu">
                     <i class="fas fa-users-cog"></i>
 
-                    <span class="ml-1">Administracion General</span>
+                    <span class="ml-1">Administracion</span>
 
                     <span class="float-right"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
@@ -153,7 +153,7 @@
                         </a>
                     </li>
 
-                    <li class="ml-3">
+                    <li class="ml-3" hidden>
                         <a class="nav-link text-white" href="{{ route('roles.index') }}">
                             <i class="fas fa-user-tag"></i>
 
@@ -161,7 +161,7 @@
                         </a>
                     </li>
 
-                    <li class="ml-3">
+                    <li class="ml-3" hidden>
                         <a class="nav-link text-white" href="{{ route('permissions.index') }}">
                             <i class="fas fa-tags"></i>
 
@@ -169,7 +169,7 @@
                         </a>
                     </li>
 
-                    <li class="ml-3">
+                    <li class="ml-3" hidden>
                         <a class="nav-link text-white" href="{{ route('dashboard.index') }}">
                             <i class="fas fa-ad"></i>
 
@@ -189,7 +189,7 @@
             </li>
 
             <!-- Support -->
-            <li class="nav-item text-white dash">
+            <li class="nav-item text-white dash" hidden>
                 <a class="nav-link text-white" href="{{ route('dashboard.index') }}">
                     <i class="fas fa-headset"></i>
 

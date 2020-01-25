@@ -30,8 +30,6 @@
 
 @section('js')
     <script>
-        $(document).ready(function () {
-            $('#footer').addClass('fixed-bottom');
-        });
+
     </script>
 @endsection

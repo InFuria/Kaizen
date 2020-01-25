@@ -24,12 +24,12 @@
 
 
                     <div class="row">
-                        <div class="form-group col-xl-3 col-lg-5">
+                        <div class="form-group col-xl-3 col-lg-5 col-5">
                             <label><strong>Cliente: </strong></label>
                             <input class="form-control btn-lg" style="width: 350px;" value="{{ $client->name }}" disabled>
                         </div>
 
-                        <div class="form-group col-xl-2 col-lg-3">
+                        <div class="form-group col-xl-2 col-lg-3 col-3 ml-5">
                             <label><strong>Tipo de Comprobante: </strong></label>
                             <select class="form-control btn-lg" style="width: 150px" disabled>
                                 <option value="init">...</option>
@@ -38,7 +38,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group col-xl-2 col-lg-3">
+                        <div class="form-group col-xl-2 col-lg-3 col-3" style="margin-left: -3%">
                             <label><strong>Metodo de pago: </strong></label>
                             <select class="form-control btn-lg" style="width: 150px" disabled>
                                 <option value="init">...</option>
@@ -47,7 +47,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group col-xl-2 col-lg-3" hidden>
+                        <div class="form-group" hidden>
                             <label><strong>Codigo de Sucursal: </strong></label>
                             <input class="form-control" style="width: 325px;" value="{{ $branch->code }}" disabled>
                         </div>
@@ -68,22 +68,22 @@
             <div class="row">
                 <div class="col-12">
                     <div class="row">
-                        <div class="form-group col-xl-3 col-lg-5">
+                        <div class="form-group col-xl-3 col-lg-5 col-4">
                             <label><strong>Producto: </strong></label>
                             {!! Form::select('product', isset($products) ? $products : ['name' => '...'], null, ['class' => 'form-control btn-lg', 'id' => 'product']) !!}
                         </div>
 
-                        <div class="form-group col-xl-1 col-lg-2">
+                        <div class="form-group col-xl-1 col-lg-2 col-2">
                             <label><strong>Cantidad: </strong></label>
                             {!! Form::number('quantity', null, ['class' => 'form-control btn-lg', 'id' => 'quantity', 'min' => 1]) !!}
                         </div>
 
-                        <div class="form-group col-xl-2 col-lg-3" style="width: 120px;">
+                        <div class="form-group col-xl-2 col-lg-4 col-3">
                             <label><strong>Precio: </strong></label>
                             {!! Form::text('price', null, ['class' => 'form-control btn-lg', 'id' => 'price', 'disabled' => 'disabled']) !!}
                         </div>
 
-                        <div class="form-group col-xl-1 col-lg-2">
+                        <div class="form-group col-xl-1 col-lg-2 col-2">
                             <label><strong>Stock: </strong></label>
                             {!! Form::number('stock', null, ['class' => 'form-control btn-lg', 'id' => 'stock', 'disabled' => 'disabled']) !!}
                         </div>
@@ -141,7 +141,9 @@
                     <label class="form-control-lg">Vuelto: </label>
                     <input class="form-control-lg col-sm-2" type="number" id="change" disabled>
 
-                    <button type="submit" id="process" form="frmProduct" class="btn btn-success btn-lg col-xl float-right mt-4" disabled>Procesar</button>
+                    <button type="button" id="process" form="frmProduct" class="btn btn-success btn-lg col-xl float-right mt-4" disabled>
+                        Procesar
+                    </button>
                 </div>
             </div>
         </div>
@@ -170,7 +172,6 @@
                     'Content-Type': 'application/json'
                 },
                 success: function (data) {
-                    console.log(data);
 
                     $('#stock').val(data['quantity']); //quatity viene de la tabla stock
                     $('#price').val(data['price'] + ' Gs');
@@ -202,7 +203,6 @@
                 if (response.data == 1) {
                     console.log('La cantidad ingresada supera al stock');
                 } else {
-                    console.log('La transaccion esta disponible');
                     getProducts();
                     $('#quantity').val(1);
                 }
@@ -256,6 +256,49 @@
                 getProducts();
             });
         }
+
+        $('#process').on('click', function () {
+            var formData = {};
+
+            $("#frmProduct").find("input[name]").each(function (index, node) {
+                formData[node.name] = node.value;
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('sales.store') }}',
+                data: formData,
+                dataType: 'html',
+                success: function (html) {
+                    w = window.open(window.location.href,"New Window", "height=600,width=800");
+                    w.document.open();
+                    w.document.write(html);
+                    w.document.write("<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js\"><\/script>");
+                    w.document.close();
+                    setTimeout(function() {
+
+                    }, 2000);
+                    w.window.print();
+                    w.window.close();
+
+                    $.ajax({
+                        type: 'GET',
+                        url: 'sales/salesEnd',
+                        success: function (response) {
+                            console.log(response);
+
+                            window.location.replace('/sales?_token={{ csrf_token() }}&client=0');
+                        },
+                        error: function (response) {
+                            console.log('Error');
+                        }
+                    });
+                },
+                error: function (data) {
+                    console.log('Error:', data);
+                }
+            });
+        });
 
         getProducts();
     </script>

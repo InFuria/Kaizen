@@ -11,9 +11,5 @@
 @section('js')
     <script>
         $('.dash').addClass('active');
-
-        $(document).ready(function () {
-            $('#footer').addClass('fixed-bottom');
-        });
     </script>
 @endsection

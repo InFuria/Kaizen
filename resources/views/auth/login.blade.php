@@ -94,4 +94,4 @@
     <script>
         $('.btn-toolbar').hide();
     </script>
-    @append
+@append
