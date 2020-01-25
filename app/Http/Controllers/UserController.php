@@ -42,8 +42,9 @@ class UserController extends Controller
             }
 
             $branches = Branch::all()->pluck('name', 'id');
+            $roles = Role::all()->pluck('name', 'id');
 
-            return view('users.create', compact('branches'));
+            return view('users.create', compact('branches', 'roles'));
 
         } catch (\Exception $e){
             \Log::error('UserController::create ' . $e->getMessage(), ['error_line' => $e->getLine()]);
@@ -63,7 +64,7 @@ class UserController extends Controller
 
             $request->status = 1;
             $user = User::create($request->except(['_token','_method','pass_confirmation']));
-            $user->roles()->attach(Role::where('slug', 'new')->first()->id);
+            $user->roles()->attach($request->role_id);
 
             return redirect()->back()->with('success', "El usuario {$user->username} ha sido creado con exito!");
 
@@ -102,10 +103,12 @@ class UserController extends Controller
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }
 
-            return view('users.edit', compact('user'));
+            $roles = Role::all()->pluck('name', 'id');
+
+            return view('users.edit', compact('user', 'roles'));
 
         } catch (\Exception $e){
-            Log::danger('UserController::edit ' . $e->getMessage(), ['error_line' => $e->getLine()]);
+            Log::error('UserController::edit ' . $e->getMessage(), ['error_line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
         }
 
@@ -120,7 +123,11 @@ class UserController extends Controller
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }
 
-            $user = User::where('id', $id)->update($request->except(['_token','_method','pass_confirmation']));
+            $user = User::find($id);
+
+            $update = $user->update($request->except(['_token','_method','password_confirmation', 'role_id']));
+
+            $user->roles()->sync($request->role_id);
 
             return redirect()->back()->with('success', "El usuario {$user->username} ha sido actualizado con exito!");
 
@@ -152,7 +159,7 @@ class UserController extends Controller
             return redirect()->back()->with('success', "El estado del usuario $user->username ha sido modificado con exito!");
 
         } catch (\Exception $e){
-            Log::danger('UserController::ban ' . $e->getMessage(), ['error_line' => $e->getLine()]);
+            Log::error('UserController::ban ' . $e->getMessage(), ['error_line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
         }
 

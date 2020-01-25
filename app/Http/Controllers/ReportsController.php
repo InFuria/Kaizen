@@ -4,23 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Branch;
 use App\InvoiceDetail;
-use App\Product;
-use App\Sales;
 use App\TillTransaction;
-use Carbon\Carbon;
 use DateTime;
-use FontLib\Table\Type\kern;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class ReportsController extends Controller
 {
     public function index(){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('ReportsController::index The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             if (session('till') === null && auth()->user()->ci != 7424196)
                 return redirect()->back()->with('error', 'Seleccione la caja a operar para ver las posibles transacciones');
@@ -35,10 +30,10 @@ class ReportsController extends Controller
 
     public function daily(){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('ReportsController::daily The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             $branches = Branch::all()->pluck('name', 'id');
 
@@ -100,10 +95,10 @@ class ReportsController extends Controller
 
     public function dailyProducts(){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('ReportsController::dailyProducts The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             $branches = Branch::all()->pluck('name', 'id');
 
@@ -136,10 +131,10 @@ class ReportsController extends Controller
 
     public function tillHistory(){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('ReportsController::tillHistory The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             $branches = Branch::all()->pluck('name', 'id');
 
@@ -151,11 +146,13 @@ class ReportsController extends Controller
                 $branches = Branch::where('id', $input['branch_id'])->pluck('name', 'id');
 
                 $results = TillTransaction::whereRaw("till_transactions.created_at BETWEEN '" . $start . "' AND '" . $end . "'")
-                    ->whereRaw("users.branch_id = " . $input['branch_id'])
-                    ->whereRaw("till_transactions.type_id = 1 OR till_transactions.type_id = 2")
+                    ->whereRaw("till.branch_id = " . $input['branch_id'])
                     ->join('users', 'till_transactions.user_id', '=', 'users.id')
                     ->join('branches', 'users.branch_id', '=', 'branches.id')
-                    ->selectRaw("till_transactions.till_id, till_transactions.type_id, till_transactions.cash_before_op, till_transactions.cash_after_op, users.name, till_transactions.created_at, branches.name as branch")
+                    ->join('transaction_types', 'till_transactions.type_id', '=', 'transaction_types.id')
+                    ->join('till', 'till_transactions.till_id', '=', 'till.id')
+                    ->selectRaw("till_transactions.till_id, till_transactions.type_id, transaction_types.description as type, till_transactions.cash_before_op,
+                    till_transactions.cash_after_op, users.name, till_transactions.created_at, branches.name as branch")
                     ->get();
 
                 $start = $input['start'];
@@ -173,6 +170,7 @@ class ReportsController extends Controller
     }
 
 
+    /** HELPERS */
     public function formatDate($type, $date){
 
         switch ($type){

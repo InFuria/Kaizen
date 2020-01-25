@@ -153,7 +153,7 @@
                         </a>
                     </li>
 
-                    <li class="ml-3" hidden>
+                    <li class="ml-3">
                         <a class="nav-link text-white" href="{{ route('roles.index') }}">
                             <i class="fas fa-user-tag"></i>
 

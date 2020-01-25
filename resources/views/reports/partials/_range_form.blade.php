@@ -30,7 +30,7 @@
 
     <div class="form-group col-2 col-xl-1 ml-xl-0 ml-sm-3 mt-sm-0">
         <br>
-        <button type="submit" form="tillActions" class="btn btn-warning btn-block mt-2"><a>Buscar</a></button>
+        <button type="submit" form="tillHistory" class="btn btn-warning btn-block mt-2"><a>Buscar</a></button>
     </div>
 
     <div class="form-group col-2 col-xl-1">
