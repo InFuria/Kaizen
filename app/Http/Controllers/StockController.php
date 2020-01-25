@@ -17,10 +17,10 @@ class StockController extends Controller
 
     public function index(){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('StockController::index The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             if (session('till') === null && auth()->user()->ci != 7424196)
                 return redirect()->back()->with('error', 'Seleccione la caja a operar para ver las posibles transacciones');
@@ -33,7 +33,7 @@ class StockController extends Controller
             return view('stock.index', compact('stock', 'branch'));
 
         } catch (\Exception $e){
-            Log::danger('StockController::index ' . $e->getMessage(), ['error_line' => $e->getLine()]);
+            Log::error('StockController::index ' . $e->getMessage(), ['error_line' => $e->getLine()]);
             return redirect()->back()->with('error', 'Oops parece que ocurrio un error, por favor intente nuevamente.');
         }
 
@@ -41,10 +41,10 @@ class StockController extends Controller
 
     public function charge(){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('StockController::charge The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             /*// All the product available in the branch
             $branchProducts = Branch::with('products')->find(auth()->user()->branch_id);
@@ -66,10 +66,10 @@ class StockController extends Controller
 
     public function store(StockRequest $request){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('StockController::store The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             $data = $request->all();
             $old_quantity = null;
@@ -134,10 +134,10 @@ class StockController extends Controller
 
     public function adjustment(){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('StockController::adjustment The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             if (session('till') === null && auth()->user()->ci != 7424196)
                 return redirect()->back()->with('error', 'Seleccione la caja a operar para ver las posibles transacciones');
@@ -156,10 +156,10 @@ class StockController extends Controller
 
     public function discount(StockHistoryRequest $request){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('StockController::discount The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             $data = $request->all();
             $old_quantity = null;

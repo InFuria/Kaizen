@@ -16,6 +16,11 @@
 </div>
 
 <div class="form-group">
+    {!! Form::label('role_id', 'Rol') !!}
+    {!! Form::select('role_id', isset($roles) ? $roles : ['name' => '...'], ['class' => 'form-control', 'id' => 'role_id']) !!}
+</div>
+
+<div class="form-group">
     {!! Form::label('phone', 'Telefono') !!}
     {!! Form::text('phone', isset($user) ? $user->phone : null, ['class' => 'form-control', 'placeholder' => 'Ingrese su telefono personal']) !!}
 </div>

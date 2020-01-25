@@ -13,10 +13,10 @@ class ProductController extends Controller
     public function index()
     {
         try{
-            /*if (! auth()->user()->isRole('superuser')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('ProductController::index The user ' . auth()->user()->name . ' no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
-            }*/
+            }
 
             if (session('till') === null && auth()->user()->ci != 7424196)
                 return redirect()->back()->with('error', 'Seleccione la caja a operar para ver las posibles transacciones');
@@ -36,7 +36,7 @@ class ProductController extends Controller
     public function create()
     {
         try{
-            if (! auth()->user()->isRole('superuser')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('ProductController::create The user ' . auth()->user()->name . ' no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }
@@ -53,7 +53,7 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         try{
-            if (! auth()->user()->isRole('superuser')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('ProductController::store The user ' . auth()->user()->name . ' no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }
@@ -72,7 +72,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         try{
-            if (! auth()->user()->isRole('superuser')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('ProductController::show The user ' . $this->user . ' no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
             }
@@ -89,8 +89,8 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         try{
-            if (! auth()->user()->isRole('superuser')){
-                Log::warning('ProductController::index The user ' . auth()->user()->name . ' no has permission to access to this function ');
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
+                Log::warning('ProductController::edit The user ' . auth()->user()->name . ' no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }
 
@@ -107,7 +107,7 @@ class ProductController extends Controller
     public function update(ProductRequest $request, $id)
     {
         try{
-            if (! auth()->user()->isRole('superuser')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('ProductController::update The user ' . auth()->user()->name . ' no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }
@@ -126,8 +126,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         try{
-
-            if (! auth()->user()->isRole('superuser')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('ProductController::destroy The user ' . auth()->user()->name . ' no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
             }

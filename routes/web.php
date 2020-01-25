@@ -20,8 +20,6 @@ Route::get('orden', function (){
     return view('ticket.order');
 });
 
-/*Route::get('/customer/print-pdf', ['as' => 'customer.printpdf', 'uses' => 'PrinterController@printPDF']);*
-
 
 /** Auth Routes manage */
 Auth::routes();

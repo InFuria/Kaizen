@@ -14,10 +14,10 @@ class ExpensesController extends Controller
 {
     public function index (){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('superuser')){
                 Log::warning('ExpensesController::index The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             if (session('till') === null && auth()->user()->ci != 7424196)
                 return redirect()->back()->with('error', 'Seleccione la caja a operar para ver las posibles transacciones');
@@ -38,10 +38,10 @@ class ExpensesController extends Controller
 
     public function create(){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('superuser')){
                 Log::warning('ExpensesController::create The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             $categories = ExpensesCategories::all()->pluck('name', 'id');
 
@@ -55,10 +55,10 @@ class ExpensesController extends Controller
 
     public function store(ExpensesRequest $request){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('superuser')){
                 Log::warning('ExpensesController::store The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             $till = Till::where('id', session('till'))->first();
             $old_cash= $till->actual_cash;

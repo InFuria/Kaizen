@@ -273,11 +273,9 @@
                     w = window.open(window.location.href,"New Window", "height=600,width=800");
                     w.document.open();
                     w.document.write(html);
-                    w.document.write("<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js\"><\/script>");
+                    w.document.write();
+                    w.document.write("<script>$(window).load(function(){ $('#masterContent').append(''); });<\/script>");
                     w.document.close();
-                    setTimeout(function() {
-
-                    }, 2000);
                     w.window.print();
                     w.window.close();
 

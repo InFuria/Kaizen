@@ -20,10 +20,10 @@ class TillController extends Controller
     public function index(Request $request)
     {
         try{
-            /*if (! auth()->user()->isRole('cashier')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 \Log::warning('TillController::index The user ' . auth()->user()->name . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
-            }*/
+            }
 
             $till = Till::where('branch_id', auth()->user()->branch_id)->get();
             $branch = Branch::where('id', auth()->user()->branch_id)->select('name')->first();
@@ -58,10 +58,10 @@ class TillController extends Controller
     public function create()
     {
         try{
-            /*if (! auth()->user()->isRole('cashier')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 \Log::warning('TillController::create The user ' . auth()->user()->name . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
-            }*/
+            }
 
             $branches = Branch::all()->pluck('name', 'id');
 
@@ -76,10 +76,10 @@ class TillController extends Controller
     public function store(TillRequest $request)
     {
         try{
-            /*if (! auth()->user()->isRole('cashier')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 \Log::warning('TillController::store The user ' . auth()->user()->name . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
-            }*/
+            }
 
             DB::beginTransaction();
 
@@ -113,10 +113,10 @@ class TillController extends Controller
     public function status(TillRequest $request)
     {
         try{
-            /*if (! auth()->user()->isRole('cashier')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 \Log::warning('TillController::status The user ' . auth()->user()->name . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
-            }*/
+            }
 
             if (Hash::check($request->password, auth()->user()->password)){
 
@@ -173,10 +173,10 @@ class TillController extends Controller
     public function extract(Till $till)
     {
         try{
-            /*if (! auth()->user()->isRole('cashier')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 \Log::warning('TillController::extract The user ' . auth()->user()->name . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
-            }*/
+            }
 
             $user = User::where('id', auth()->user()->id)->pluck('name', 'id');
 
@@ -191,10 +191,10 @@ class TillController extends Controller
     public function extraction(TillRequest $request, Till $till)
     {
         try{
-            /*if (! auth()->user()->isRole('cashier')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 \Log::warning('TillController::extraction The user ' . auth()->user()->name . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
-            }*/
+            }
 
             if (Hash::check($request->password, auth()->user()->password)){
 
@@ -234,10 +234,10 @@ class TillController extends Controller
     public function charge(Till $till)
     {
         try{
-            /*if (! auth()->user()->isRole('cashier')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 \Log::warning('TillController::charge The user ' . auth()->user()->name . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
-            }*/
+            }
 
             $user = User::where('id', auth()->user()->id)->pluck('name', 'id');
 
@@ -251,10 +251,10 @@ class TillController extends Controller
     public function deposit(TillRequest $request, Till $till)
     {
         try{
-            /*if (! auth()->user()->isRole('cashier')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 \Log::warning('TillController::deposit The user ' . auth()->user()->name . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilizar esta funcionalidad.');
-            }*/
+            }
 
             if (Hash::check($request->password, auth()->user()->password)){
 
@@ -290,10 +290,10 @@ class TillController extends Controller
 
     public function cashCount(Till $till){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('TillController::cashCount The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             return view('till.cash_count', compact('till'));
 
@@ -306,10 +306,10 @@ class TillController extends Controller
 
     public function audit(TillAuditRequest $request, Till $till){
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('TillController::audit The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             if (Hash::check($request->password, auth()->user()->password)){
 

@@ -36,11 +36,7 @@
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->branch }}</td>
                             <td>{{ $item->till_id }}</td>
-                            @if($item->type_id == 1)
-                                <td><label class="bg-danger rounded-pill p-1">Cierre de Caja</label></td>
-                            @else
-                                <td><label class="bg-success rounded-pill p-1">Apertura de Caja</label></td>
-                            @endif
+                            <td>{{ $item->type }}</td>
                             <td>{{ $item->cash_before_op }}</td>
                             <td>{{ $item->cash_after_op }}</td>
                             <td>{{ $item->created_at }}</td>

@@ -26,6 +26,7 @@ class CreateTillTable extends Migration
         Schema::create('transaction_types', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->string('description');
         });
 
         Schema::create('till_transactions', function (Blueprint $table) {

@@ -13,8 +13,6 @@ use App\StockHistory;
 use App\Till;
 use App\TillTransaction;
 use App\User;
-use Barryvdh\DomPDF\Facade as PDF;
-use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -25,7 +23,7 @@ class SalesController extends Controller
     public function index()
     {
         try{
-            if (auth()->user()->isRole('cashier')){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('SalesController::index The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
             }
@@ -71,10 +69,10 @@ class SalesController extends Controller
     public function store(Request $request){
 
         try{
-            /*if ($this->user){
+            if (! auth()->user()->isRole('cashier') && ! auth()->user()->isRole('superuser')){
                 Log::warning('SalesController::store The user ' . $this->user . 'no has permission to access to this function ');
                 return redirect()->back()->with('error', 'No posee permisos para utilziar esta funcionalidad, por favor contacte con Soporte.');
-            }*/
+            }
 
             $data = $request->all();
             $client = json_decode($data['client']);
@@ -172,10 +170,11 @@ class SalesController extends Controller
                 $update->save();
             }
 
+            $till_ctrl = new TillController();
 
             $till_transaction = new TillTransaction();
             $till_transaction->till_id = session('till');
-            $till_transaction->type_id= 3;
+            $till_transaction->type_id= $till_ctrl->typeTransaction('sale');
             $till_transaction->detail_id = $sales->id;
             $till_transaction->cash_before_op = $till->actual_cash;
             $till_transaction->cash_after_op = $till->actual_cash + $invoice->total;
@@ -206,9 +205,7 @@ class SalesController extends Controller
         }
     }
 
-    public function order(Request $request){
 
-    }
 
     public function salesEnd(){
 
