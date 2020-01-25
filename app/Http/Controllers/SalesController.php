@@ -181,6 +181,11 @@ class SalesController extends Controller
             $till_transaction->user_id = auth()->user()->id;
             $till_transaction->save();
 
+
+            $till = Till::find(session('till'));
+            $till->actual_cash = $till->actual_cash + $invoice->total;
+            $till->save();
+
             DB::commit();
 
             $branch = Branch::where('id', auth()->user()->branch_id)->pluck('name')->first();

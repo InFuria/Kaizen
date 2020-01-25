@@ -42,4 +42,9 @@ class LoginController extends Controller
     {
         return redirect()->route('till.index');
     }
+
+    public function username()
+    {
+        return 'username';
+    }
 }
